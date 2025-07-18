@@ -91,7 +91,6 @@ export default function BidDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      {/* Added max-h-[90vh] and overflow-y-auto to DialogContent to make it scrollable and prevent keyboard overlap */}
       <DialogContent className="sm:max-w-[425px] bg-card-overlay border-black-charcoal text-foreground max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-platinum-gradient">Place Bid on Table {table.name}</DialogTitle>
@@ -100,15 +99,7 @@ export default function BidDialog({
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
-          <div className="flex justify-between items-center">
-            <div>
-              <p className="text-sm text-muted-foreground">Current Bid:</p>
-              <p className="font-bold text-yellow-400">₹{table.current_bid.toLocaleString()}</p>
-              <p className="text-xs text-muted-foreground">by {table.highest_bidder_username || "No bidder"}</p>
-            </div>
-            <Badge className={`${getCategoryColor(table.category)} text-white`}>{table.category}</Badge>
-          </div>
-
+          {/* Moved "Enter Your Bid" section to the top */}
           <div className="space-y-2">
             <Label htmlFor="bid-amount" className="text-sm text-foreground">
               Enter Your Bid (Min: ₹{(table.current_bid + 1000).toLocaleString()})
@@ -123,6 +114,16 @@ export default function BidDialog({
               disabled={isPlacingBid}
             />
             {bidError && <p className="text-red-400 text-xs mt-1">{bidError}</p>}
+          </div>
+
+          {/* Original "Current Bid" section, now below the input */}
+          <div className="flex justify-between items-center">
+            <div>
+              <p className="text-sm text-muted-foreground">Current Bid:</p>
+              <p className="font-bold text-yellow-400">₹{table.current_bid.toLocaleString()}</p>
+              <p className="text-xs text-muted-foreground">by {table.highest_bidder_username || "No bidder"}</p>
+            </div>
+            <Badge className={`${getCategoryColor(table.category)} text-white`}>{table.category}</Badge>
           </div>
         </div>
         <div className="flex justify-end">

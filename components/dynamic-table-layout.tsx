@@ -193,9 +193,10 @@ export default function DynamicTableLayout({
       />
       <LayoutElement
         id="standing2"
-        position={{ top: "20%", left: "30%", width: "50px", height: "70px" }}
+        position={{ top: "20%", left: "30%", width: "50px", height: "50px" }}
         category="Standing"
         pax="5"
+        shape="circle"
         tables={tables}
         hoveredTable={hoveredTable}
         selectedTable={selectedTable}
@@ -205,9 +206,10 @@ export default function DynamicTableLayout({
       />
       <LayoutElement
         id="standing3"
-        position={{ top: "20%", left: "50%", width: "50px", height: "70px" }}
+        position={{ top: "20%", left: "51%", width: "50px", height: "50px" }}
         category="Standing"
         pax="5"
+        shape="circle"
         tables={tables}
         hoveredTable={hoveredTable}
         selectedTable={selectedTable}
@@ -217,7 +219,7 @@ export default function DynamicTableLayout({
       />
       <LayoutElement
         id="vip2"
-        position={{ top: "10%", left: "70%", width: "50px", height: "70px" }}
+        position={{ top: "10%", left: "75%", width: "50px", height: "70px" }}
         category="VIP"
         pax="6-8"
         tables={tables}
@@ -243,7 +245,7 @@ export default function DynamicTableLayout({
       />
       <LayoutElement
         id="vip7"
-        position={{ top: "30%", left: "70%", width: "50px", height: "70px" }}
+        position={{ top: "30%", left: "75%", width: "50px", height: "70px" }}
         category="VIP"
         pax="6-8"
         tables={tables}
@@ -257,7 +259,7 @@ export default function DynamicTableLayout({
       {/* Console and Bar (Oval shapes) */}
       <LayoutElement
         id="console"
-        position={{ top: "45%", left: "5%", width: "120px", height: "80px" }}
+        position={{ top: "45%", left: "6%", width: "40px", height: "80px" }}
         shape="oval"
         label="CONSOLE"
         isStaticLabel={true} // Mark as static label
@@ -270,7 +272,7 @@ export default function DynamicTableLayout({
       />
       <LayoutElement
         id="bar-oval"
-        position={{ top: "45%", left: "80%", width: "120px", height: "80px" }}
+        position={{ top: "45%", left: "78%", width: "120px", height: "80px" }}
         shape="oval"
         label="BAR"
         isStaticLabel={true} // Mark as static label
@@ -311,9 +313,10 @@ export default function DynamicTableLayout({
       {/* Lower-Right Standing and VIP Tables */}
       <LayoutElement
         id="standing1"
-        position={{ top: "60%", left: "40%", width: "50px", height: "70px" }}
+        position={{ top: "60%", left: "40%", width: "50px", height: "50px" }}
         category="Standing"
         pax="5"
+        shape="circle"
         tables={tables}
         hoveredTable={hoveredTable}
         selectedTable={selectedTable}
@@ -324,7 +327,7 @@ export default function DynamicTableLayout({
       {/* New VIP table (vip4) placed above standing4 */}
       <LayoutElement
         id="vip4"
-        position={{ top: "60%", left: "70%", width: "50px", height: "70px" }}
+        position={{ top: "60%", left: "75%", width: "50px", height: "70px" }}
         category="VIP"
         pax="6-8"
         tables={tables}
@@ -336,7 +339,7 @@ export default function DynamicTableLayout({
       />
       <LayoutElement
         id="vip8"
-        position={{ top: "75%", left: "40%", width: "50px", height: "70px" }}
+        position={{ top: "75%", left: "43%", width: "50px", height: "70px" }}
         category="VIP"
         pax="6-8"
         tables={tables}
@@ -348,9 +351,10 @@ export default function DynamicTableLayout({
       />
       <LayoutElement
         id="standing4"
-        position={{ top: "75%", left: "70%", width: "50px", height: "70px" }}
+        position={{ top: "77%", left: "75%", width: "50px", height: "50px" }}
         category="Standing"
         pax="5"
+        shape="circle"
         tables={tables}
         hoveredTable={hoveredTable}
         selectedTable={selectedTable}
@@ -362,7 +366,7 @@ export default function DynamicTableLayout({
       {/* Entry points */}
       <LayoutElement
         id="entry-top-right"
-        position={{ top: "23%", right: "2%", width: "80px", height: "30px" }}
+        position={{ top: "23%", right: "0%", width: "80px", height: "30px" }}
         label="ENTRY"
         isEntry={true}
         tables={tables}
@@ -374,7 +378,7 @@ export default function DynamicTableLayout({
       />
       <LayoutElement
         id="entry-bottom-right"
-        position={{ top: "70%", right: "1%", width: "80px", height: "30px" }}
+        position={{ top: "71%", right: "0%", width: "80px", height: "30px" }}
         label="ENTRY"
         isEntry={true}
         tables={tables}
@@ -386,9 +390,9 @@ export default function DynamicTableLayout({
       />
 
       {/* New static labels at the bottom */}
-      <LayoutElement
+      {/* <LayoutElement
         id="vip-ref"
-        position={{ bottom: "5%", left: "25%", transform: "translateX(-50%)", width: "120px", height: "40px" }}
+        position={{ bottom: "0%", left: "25%", transform: "translateX(-50%)", width: "120px", height: "40px" }}
         label="VIP"
         pax="6-8"
         isStaticLabel={true}
@@ -398,10 +402,10 @@ export default function DynamicTableLayout({
         onTableHover={onTableHover}
         onTableSelect={onTableSelect}
         currentUser={currentUser}
-      />
-      <LayoutElement
+      /> */}
+      {/* <LayoutElement
         id="standing-ref"
-        position={{ bottom: "5%", left: "75%", transform: "translateX(-50%)", width: "120px", height: "40px" }}
+        position={{ bottom: "0%", left: "75%", transform: "translateX(-50%)", width: "120px", height: "40px" }}
         label="STANDING"
         pax="5"
         isStaticLabel={true}
@@ -411,7 +415,7 @@ export default function DynamicTableLayout({
         onTableHover={onTableHover}
         onTableSelect={onTableSelect}
         currentUser={currentUser}
-      />
+      /> */}
 
       {/* Current User Indicator - Top Right */}
       <div className="absolute top-2 right-2 flex items-center gap-2 text-xs text-green-400">

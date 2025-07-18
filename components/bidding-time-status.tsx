@@ -128,10 +128,10 @@ export default function BiddingTimeStatus({ tables }: BiddingTimeStatusProps) {
       </div>
       <div className="mt-2 text-sm text-yellow-200 text-center">{config.description}</div>
       {/* Added for debugging: Display raw times */}
-      <div className="mt-4 text-xs text-gray-500 text-center">
+      {/* <div className="mt-4 text-xs text-gray-500 text-center">
         <p>DB Start: {firstTable.bidding_starts_at}</p>
         <p>DB End: {firstTable.bidding_ends_at}</p>
-      </div>
+      </div> */}
     </div>
   )
 }
