@@ -119,7 +119,6 @@ export default function BidDialog({
               onChange={(e) => setCustomBid(e.target.value)}
               className="bg-background border-yellow-500/50 text-foreground"
               min={table.current_bid + 1000}
-              step="1000"
               disabled={isPlacingBid}
             />
             {bidError && <p className="text-red-400 text-xs mt-1">{bidError}</p>}
