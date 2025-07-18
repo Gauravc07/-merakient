@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react" // Import useRef
+import { useState, useEffect, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -28,29 +28,26 @@ export default function BidDialog({
 }: BidDialogProps) {
   const [customBid, setCustomBid] = useState<string>("")
   const [bidError, setBidError] = useState<string>("")
-  const initialBidSetRef = useRef(false) // Use a ref to track if initial bid has been set for the current dialog open cycle
+  const initialBidSetRef = useRef(false)
 
   useEffect(() => {
     if (isOpen && table && !initialBidSetRef.current) {
-      // Only set initial bid if dialog is open, table exists, and it hasn't been set yet for this open cycle
       setCustomBid((table.current_bid + 1000).toString())
       setBidError("")
-      initialBidSetRef.current = true // Mark as set
+      initialBidSetRef.current = true
     } else if (!isOpen) {
-      // Reset when dialog closes
       setCustomBid("")
       setBidError("")
-      initialBidSetRef.current = false // Reset ref when dialog closes
+      initialBidSetRef.current = false
     }
-  }, [isOpen, table]) // Depend on isOpen and table to detect dialog open/close and table changes
+  }, [isOpen, table])
 
   const handleInternalPlaceBid = async () => {
-    if (!table) return // Should not happen if dialog is open
+    if (!table) return
 
     const bidAmount = Number.parseInt(customBid)
     const minimumBid = table.current_bid + 1000
 
-    // Validation
     if (!customBid || isNaN(bidAmount)) {
       setBidError("Please enter a valid bid amount")
       return
@@ -65,7 +62,7 @@ export default function BidDialog({
     const result = await onPlaceBid(table.id, bidAmount)
 
     if (result.success) {
-      onOpenChange(false) // Close dialog on success
+      onOpenChange(false)
     } else {
       setBidError(result.error || "Failed to place bid")
     }
@@ -90,11 +87,12 @@ export default function BidDialog({
     }
   }
 
-  if (!table) return null // Don't render if no table is selected
+  if (!table) return null
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px] bg-card-overlay border-black-charcoal text-foreground">
+      {/* Added max-h-[90vh] and overflow-y-auto to DialogContent to make it scrollable and prevent keyboard overlap */}
+      <DialogContent className="sm:max-w-[425px] bg-card-overlay border-black-charcoal text-foreground max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-platinum-gradient">Place Bid on Table {table.name}</DialogTitle>
           <DialogDescription className="text-muted-foreground">
@@ -120,7 +118,7 @@ export default function BidDialog({
               type="text"
               placeholder={`${table.current_bid + 1000}`}
               value={customBid}
-              onChange={(e) => setCustomBid(e.target.value)} // Removed console log
+              onChange={(e) => setCustomBid(e.target.value)}
               className="bg-background border-yellow-500/50 text-foreground"
               disabled={isPlacingBid}
             />
