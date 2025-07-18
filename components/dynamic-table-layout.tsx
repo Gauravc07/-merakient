@@ -114,7 +114,7 @@ const LayoutElement = ({
       ) : isBidable ? (
         <>
           <div className="text-[10px] leading-tight">{tableData.id.toUpperCase()}</div>
-          <div className="text-xs leading-tight">{tableData.category.toUpperCase()}</div>
+          {/* <div className="text-xs leading-tight">{tableData.category.toUpperCase()}</div> */}
           {/* Removed pax count for bidable tables as requested */}
           {isCurrentUserWinning && (
             <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse border border-black"></div>

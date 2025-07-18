@@ -9,7 +9,7 @@ const upcomingEvents = [
     title: "The King of Good Times",
     location: "KIKI, Pune",
     date: "25TH JULY",
-    description: "SBI celebrating recovery",
+    description: "Celebrating 14000 crores worth of recovery",
     image: "/images/king-of-good-times.png",
   },
 ]

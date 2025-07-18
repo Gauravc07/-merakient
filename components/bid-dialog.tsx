@@ -93,7 +93,7 @@ export default function BidDialog({
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px] bg-card-overlay border-black-charcoal text-foreground max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-platinum-gradient">Place Bid on Table {table.name}</DialogTitle>
+        <DialogTitle className="text-platinum-gradient">{currentUser} Place Your Bid on Table {table.name}</DialogTitle>
           <DialogDescription className="text-muted-foreground">
             Current highest bid: ₹{table.current_bid.toLocaleString()}
           </DialogDescription>
