@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react" // Import useRef
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -28,17 +28,21 @@ export default function BidDialog({
 }: BidDialogProps) {
   const [customBid, setCustomBid] = useState<string>("")
   const [bidError, setBidError] = useState<string>("")
+  const initialBidSetRef = useRef(false) // Use a ref to track if initial bid has been set for the current dialog open cycle
 
   useEffect(() => {
-    if (isOpen && table) {
+    if (isOpen && table && !initialBidSetRef.current) {
+      // Only set initial bid if dialog is open, table exists, and it hasn't been set yet for this open cycle
       setCustomBid((table.current_bid + 1000).toString())
       setBidError("")
+      initialBidSetRef.current = true // Mark as set
     } else if (!isOpen) {
       // Reset when dialog closes
       setCustomBid("")
       setBidError("")
+      initialBidSetRef.current = false // Reset ref when dialog closes
     }
-  }, [isOpen, table])
+  }, [isOpen, table]) // Depend on isOpen and table to detect dialog open/close and table changes
 
   const handleInternalPlaceBid = async () => {
     if (!table) return // Should not happen if dialog is open
@@ -113,12 +117,11 @@ export default function BidDialog({
             </Label>
             <Input
               id="bid-amount"
-              type="number"
+              type="text"
               placeholder={`${table.current_bid + 1000}`}
               value={customBid}
-              onChange={(e) => setCustomBid(e.target.value)}
+              onChange={(e) => setCustomBid(e.target.value)} // Removed console log
               className="bg-background border-yellow-500/50 text-foreground"
-              min={table.current_bid + 1000}
               disabled={isPlacingBid}
             />
             {bidError && <p className="text-red-400 text-xs mt-1">{bidError}</p>}
