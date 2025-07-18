@@ -36,7 +36,7 @@ export function getBorderColorClass(category: string) {
     case "VIP":
       return "border-yellow-400" // Golden border for VIP
     case "Standing":
-      return "border-silver" // Silver border for Standing
+      return "border-yellow-400" // Silver border for Standing
     default:
       return "border-yellow-400" // Default to golden for other categories or if category is not matched
   }
