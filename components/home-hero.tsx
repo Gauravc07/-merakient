@@ -7,7 +7,7 @@ export default function HomeHero() {
       className="relative w-full min-h-screen flex flex-col items-center justify-between bg-hero-gradient text-center overflow-hidden py-10"
     >
       <Image
-        src="/images/kingfisher-plane-hero.png"
+        src="/images/f1vijay.jpg"
         alt="Black panther with glowing eyes"
         fill
         style={{ objectFit: "cover" }}
