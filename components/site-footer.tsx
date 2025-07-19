@@ -12,7 +12,7 @@ export default function SiteFooter() {
           </div>
           <div className="flex space-x-4">
             <Link
-              href="#"
+              href="https://www.instagram.com/the.meraki_ent?igsh=MWw2Z3l3MWI2Z2kwdA=="
               className="p-2 border border-platinum rounded-full text-platinum hover:bg-platinum/10 transition-colors"
             >
               <InstagramIcon className="h-6 w-6" />

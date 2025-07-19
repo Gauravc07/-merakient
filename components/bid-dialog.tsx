@@ -59,12 +59,15 @@ export default function BidDialog({
     }
 
     setBidError("")
+    // Close the dialog immediately after validation passes and before placing the bid
+    onOpenChange(false)
+
     const result = await onPlaceBid(table.id, bidAmount)
 
-    if (result.success) {
-      onOpenChange(false)
-    } else {
+    // If there was an error, re-open the dialog to show the error message
+    if (!result.success) {
       setBidError(result.error || "Failed to place bid")
+      onOpenChange(true) // Re-open dialog on error
     }
   }
 
@@ -93,13 +96,14 @@ export default function BidDialog({
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px] bg-card-overlay border-black-charcoal text-foreground max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-        <DialogTitle className="text-platinum-gradient">{currentUser} Place Your Bid on Table {table.name}</DialogTitle>
+          <DialogTitle className="text-platinum-gradient">
+            {currentUser} Place Your Bid on Table {table.name}
+          </DialogTitle>
           <DialogDescription className="text-muted-foreground">
             Current highest bid: ₹{table.current_bid.toLocaleString()}
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
-          {/* Moved "Enter Your Bid" section to the top */}
           <div className="space-y-2">
             <Label htmlFor="bid-amount" className="text-sm text-foreground">
               Enter Your Bid (Min: ₹{(table.current_bid + 1000).toLocaleString()})
@@ -116,7 +120,6 @@ export default function BidDialog({
             {bidError && <p className="text-red-400 text-xs mt-1">{bidError}</p>}
           </div>
 
-          {/* Original "Current Bid" section, now below the input */}
           <div className="flex justify-between items-center">
             <div>
               <p className="text-sm text-muted-foreground">Current Bid:</p>
