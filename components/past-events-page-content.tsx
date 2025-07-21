@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import Image from "next/image"
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog" // Import Dialog components
+import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog" // Import DialogTitle
 
 const pastEventsData = [
   {
@@ -33,7 +33,7 @@ const pastEventsData = [
     id: 4,
     title: "The Asylum Wednesdays",
     date: "May 28, 2025",
-    description: "Sound by DHYAN and ANTOOXKRAUTEK. ",
+    description: "Sound by DHYAN and ANTOOXKRAUTEK. Curated by Team Di Mora & Manav Khiani.",
     location: "DI MORA - PUNE",
     image:
       "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/ASYLUM%20MAY%2028%20%282%29.png-bwJ1hWxGoZHdnWV5EwO7rTOYZwGcbo.jpeg",
@@ -51,7 +51,7 @@ const pastEventsData = [
     id: 6,
     title: "Bollywood Takeover",
     date: "June 07, 2025",
-    description: "Featuring SUSHMAHAN - The Mashup Monarchs Duo. Hosted by Prathmesh Joshi.",
+    description: "Featuring SUSHMAHAN - The Mashup Monarchs Duo. Hosted by Prathmesh Joshi & Omkar Patil.",
     location: "EPITOME - PUNE",
     image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-CXDLROBzPGDrMQlnQtcRyc0mzeNnOJ.png",
   },
@@ -69,7 +69,7 @@ const pastEventsData = [
     id: 8,
     title: "House of Bollywood",
     date: "July 05, 2025",
-    description: "Featuring DJ NAAIRO, also featuring K-YASH.",
+    description: "Featuring DJ NAAIRO, also featuring K-YASH. Hosted by Arjun Shinde & Shreyas Bhandari.",
     location: "PENTHOUZE - PUNE",
     image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-Nl4rdXKnGJj3OxkT39giK3LUeIFV8D.png",
   },
@@ -77,10 +77,18 @@ const pastEventsData = [
     id: 9,
     title: "SIN CITY",
     date: "July 13, 2025",
-    description: "Featuring TRUX. Hosted by  Chirag Bhagat and Sarang Angarkar.",
+    description: "Featuring TRUX. Hosted by Prakash Parmar, Mona Saraf, Chirag Bhagat and Sarang Angarkar.",
     location: "KIKI, B WING, 2ND FLOOR, THE MILLS - RAJA BAHADUR CITY CENTRE, PUNE",
     image:
       "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/SIN%20CITY%20KIKI-IbCddTmhNFu1K6kWxGJhupBTkhj2rE.png",
+  },
+  {
+    id: 10, // Added as the 10th event
+    title: "KIKI LAND",
+    date: "July 20, 2025", // Adjusted date format for consistency
+    description: "Feat. Neel Chhabra, RAOS, Siaara, DJ NYX",
+    location: "KIKI, B WING, 2ND FLOOR, THE MILLS - RAJA BAHADUR CITY CENTRE, PUNE", // Inferred from the image
+    image: "/images/kikiland1.jpg", // New image added
   },
 ]
 
@@ -114,6 +122,8 @@ export default function PastEventsPageContent() {
                   </div>
                 </DialogTrigger>
                 <DialogContent className="max-w-4xl p-0 bg-transparent border-none">
+                  {/* Added DialogTitle for accessibility, visually hidden */}
+                  <DialogTitle className="sr-only">{`Image of ${event.title}`}</DialogTitle>
                   <Image
                     src={event.image || "/placeholder.svg"}
                     alt={event.title}

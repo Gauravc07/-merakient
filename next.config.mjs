@@ -17,7 +17,7 @@ const nextConfig = {
   },
   experimental: {
     // serverComponentsExternalPackages: ['bcryptjs'], // Old name
-    serverExternalPackages: ['bcryptjs'], // New name for Next.js 15
+    // serverExternalPackages: ['bcryptjs'], // This option is no longer recognized in Next.js 15
   },
   // Ensure API routes are handled correctly
   async rewrites() {

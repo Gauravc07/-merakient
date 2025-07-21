@@ -13,7 +13,7 @@ export default function HomePage() {
         <HomeHero />
         <StatsSection /> {/* Section with "About Us" button */}
         <UpcomingEvents /> {/* Moved here, as the third section */}
-        <GlimpseIntoOurEvents /> {/* Now the fourth section */}
+        {/* <GlimpseIntoOurEvents /> Now the fourth section */}
       </main>
       <SiteFooter />
     </div>

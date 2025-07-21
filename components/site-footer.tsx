@@ -38,7 +38,7 @@ export default function SiteFooter() {
             <Link href="/#upcoming-events" className="hover:underline hover:text-platinum transition-colors">
               <span className="text-platinum pr-1">•</span>Upcoming Events
             </Link>
-            <Link href="/#glimpse-events" className="hover:underline hover:text-platinum transition-colors">
+            <Link href="/past-events" className="hover:underline hover:text-platinum transition-colors">
               <span className="text-platinum pr-1">•</span>Past Events
             </Link>
             <Link href="/about-us" className="hover:underline hover:text-platinum transition-colors">
