@@ -53,9 +53,19 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey)
 
 async function updateEventTimes() {
   try {
-    // Set bidding to start now and end on July 30th, 2025, 23:59:59 IST
+    // Set bidding to start now
     const startTime = new Date().toISOString()
-    const endTime = "2025-07-30T23:59:59+05:30" // July 30th, 2025, 11:59:59 PM IST
+
+    // Calculate 12 PM today in IST
+    const nowInIST = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }))
+    nowInIST.setHours(12, 0, 0, 0) // Set to 12:00:00.000 PM IST
+
+    // If 12 PM today has already passed, set it for 12 PM tomorrow
+    if (nowInIST.getTime() < new Date().getTime()) {
+      nowInIST.setDate(nowInIST.getDate() + 1)
+    }
+
+    const endTime = nowInIST.toISOString().replace("Z", "+05:30") // Format to ISO with IST offset
 
     console.log("\n🕐 Updating event times...")
     console.log(`📅 Start Time: ${startTime}`)
