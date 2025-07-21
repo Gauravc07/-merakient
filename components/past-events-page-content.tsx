@@ -51,7 +51,7 @@ const pastEventsData = [
     id: 6,
     title: "Bollywood Takeover",
     date: "June 07, 2025",
-    description: "Featuring SUSHMAHAN - The Mashup Monarchs Duo. Hosted by Prathmesh Joshi & Omkar Patil.",
+    description: "Featuring SUSHYOHAN - The Mashup Monarchs Duo. Hosted by Prathmesh Joshi & Omkar Patil.",
     location: "EPITOME - PUNE",
     image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-CXDLROBzPGDrMQlnQtcRyc0mzeNnOJ.png",
   },

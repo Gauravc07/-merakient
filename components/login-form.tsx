@@ -34,9 +34,9 @@ export default function LoginForm() {
               Login
             </Button>
           </form>
-          <div className="mt-4 text-sm text-muted-foreground text-center">
+          {/* <div className="mt-4 text-sm text-muted-foreground text-center">
             <p>Demo credentials: user1 / password1</p>
-          </div>
+          </div> */}
         </CardContent>
       </Card>
     </div>
