@@ -5,6 +5,7 @@ import GlimpseIntoOurEvents from "@/components/glimpse-into-our-events"
 import SiteHeader from "@/components/site-header"
 import SiteFooter from "@/components/site-footer"
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import { Analytics } from "@vercel/analytics/next"
 
 export default function HomePage() {
   return (
