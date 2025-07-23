@@ -1,6 +1,6 @@
 import { createClient } from "@supabase/supabase-js"
 import bcrypt from "bcrypt"
-import { USERS } from "../lib/users.ts" // Adjust path if necessary
+import { USERS } from "../lib/users.mjs" // Adjust path if necessary
 
 // Ensure these environment variables are set in your Vercel project or .env.local
 const supabaseUrl = process.env.SUPABASE_URL

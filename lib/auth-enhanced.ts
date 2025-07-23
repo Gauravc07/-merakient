@@ -1,9 +1,16 @@
 "use server"
 
 import { cookies } from "next/headers"
+import { createClient } from "@supabase/supabase-js"
+import bcrypt from "bcrypt"
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+)
 
 const SESSION_COOKIE_NAME = "meraki_session"
-const SPECTATOR_COOKIE_NAME = "meraki_spectator_session" // New cookie for spectators
+const SPECTATOR_COOKIE_NAME = "meraki_spectator_session"
 const SESSION_EXPIRATION_SECONDS = 60 * 60 * 24 // 24 hours
 
 export interface AuthUser {
@@ -14,24 +21,27 @@ export interface AuthUser {
 
 export async function authenticateUser(username: string, password: string): Promise<AuthUser | null> {
   try {
-    // Simple authentication for demo - check against user1-user40 pattern
-    const userNumber = username.replace("user", "")
-    const expectedPassword = `password${userNumber}`
+    // Fetch user with matching username from Supabase
+    const { data, error } = await supabase
+      .from("users")
+      .select("id, username, email, password_hash")
+      .eq("username", username)
+      .single()
 
-    if (
-      password === expectedPassword &&
-      userNumber.match(/^\d+$/) &&
-      Number.parseInt(userNumber) >= 1 &&
-      Number.parseInt(userNumber) <= 40
-    ) {
-      return {
-        id: Number.parseInt(userNumber),
-        username: username,
-        email: `${username}@demo.com`,
-      }
+    if (error || !data) {
+      console.error("Supabase fetch error:", error)
+      return null
     }
 
-    return null
+    // Compare provided password with bcrypt hash
+    const isMatch = await bcrypt.compare(password, data.password_hash)
+    if (!isMatch) return null
+
+    return {
+      id: data.id,
+      username: data.username,
+      email: data.email,
+    }
   } catch (error) {
     console.error("Authentication error:", error)
     return null
@@ -68,7 +78,6 @@ export async function setSpectatorSessionCookie() {
 
 export async function getSessionUserId(): Promise<string | undefined> {
   try {
-    // Await cookies() before calling .get()
     return (await cookies()).get(SESSION_COOKIE_NAME)?.value
   } catch (error) {
     console.error("Error getting session cookie:", error)
@@ -78,7 +87,6 @@ export async function getSessionUserId(): Promise<string | undefined> {
 
 export async function isSpectatorSession(): Promise<boolean> {
   try {
-    // Await cookies() before calling .has()
     return (await cookies()).has(SPECTATOR_COOKIE_NAME)
   } catch (error) {
     console.error("Error checking spectator session cookie:", error)
@@ -88,20 +96,20 @@ export async function isSpectatorSession(): Promise<boolean> {
 
 export async function deleteSessionCookie() {
   try {
-    // Await cookies() before calling .delete()
     const cookieStore = await cookies()
     cookieStore.delete(SESSION_COOKIE_NAME)
-    cookieStore.delete(SPECTATOR_COOKIE_NAME) // Delete spectator cookie too
+    cookieStore.delete(SPECTATOR_COOKIE_NAME)
   } catch (error) {
     console.error("Error deleting session cookie:", error)
   }
 }
 
 export async function getCurrentUser(): Promise<AuthUser | null> {
-  const userId = await getSessionUserId() // Await the async function
+  const userId = await getSessionUserId()
   if (!userId) return null
 
   try {
+    // Optionally you can fetch full user info from Supabase if needed
     const userNumber = userId.replace("user", "")
     return {
       id: Number.parseInt(userNumber) || 1,

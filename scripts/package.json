@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "scripts": {
     "update-times": "node update-event-times.js",
     "start-event-now": "node start-event-now.js",
