@@ -55,9 +55,9 @@ export default function SimpleLoginForm() {
           </button>
         </form>
 
-        <div className="mt-4 text-sm text-gray-400 text-center">
+        {/* <div className="mt-4 text-sm text-gray-400 text-center">
           <p>Demo credentials: user1 / password1</p>
-        </div>
+        </div> */}
 
         <div className="mt-6 border-t border-gray-700 pt-6">
           <h2 className="text-xl font-bold text-yellow-400 text-center mb-4">Or</h2>
