@@ -2,7 +2,13 @@
 
 import { useState, useEffect } from "react"
 import { Clock, Calendar, AlertCircle } from "lucide-react"
-import { formatTimeRemaining, isEventLive, getTimeUntilStart, getTimeUntilEnd, getISTTime } from "@/utils/time-helpers"
+import {
+  formatTimeRemaining,
+  isEventLive,
+  getTimeUntilStart,
+  getTimeUntilEnd,
+  getISTTime,
+} from "@/utils/time-helpers"
 
 interface BiddingTimeStatusProps {
   tables: Array<{
@@ -13,92 +19,74 @@ interface BiddingTimeStatusProps {
 
 export default function BiddingTimeStatus({ tables }: BiddingTimeStatusProps) {
   const [currentTime, setCurrentTime] = useState(new Date())
-  const [timeRemaining, setTimeRemaining] = useState<number>(0)
   const [eventStatus, setEventStatus] = useState<"not-started" | "live" | "ended">("not-started")
+  const [customLiveCountdown, setCustomLiveCountdown] = useState<number>(0)
+  const [liveStartTime, setLiveStartTime] = useState<Date | null>(null)
 
-  // Update time every second
+  // Timer tick every second
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date())
+
+      // When in LIVE mode, count down from 1:05:00
+      if (eventStatus === "live" && liveStartTime) {
+        const elapsed = new Date().getTime() - liveStartTime.getTime()
+        const remaining = 65 * 60 * 1000 - elapsed // 1 hr 5 min in ms
+        setCustomLiveCountdown(Math.max(remaining, 0))
+      }
     }, 1000)
 
     return () => clearInterval(timer)
-  }, [])
+  }, [eventStatus, liveStartTime])
 
-  // Calculate event status and time remaining
+  // Initial event state
   useEffect(() => {
-    if (tables.length === 0) {
-      console.log("BiddingTimeStatus: No tables data yet.")
-      return
-    }
+    if (tables.length === 0) return
 
     const firstTable = tables[0]
     const startsAt = firstTable.bidding_starts_at
     const endsAt = firstTable.bidding_ends_at
 
-    const nowIST = getISTTime() // Get current time in IST for comparison
-    const startUTC = new Date(startsAt) // Parse DB start time (it's UTC)
-    const endUTC = new Date(endsAt) // Parse DB end time (it's UTC)
+    const nowIST = getISTTime()
 
-    console.log("--- BiddingTimeStatus Debug ---")
-    console.log("Current Time (Browser Local):", currentTime.toLocaleString())
-    console.log("Current Time (IST from helper):", nowIST.toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }))
-    console.log("Starts At (from DB, UTC):", startsAt, "->", startUTC.toLocaleString())
-    console.log("Ends At (from DB, UTC):", endsAt, "->", endUTC.toLocaleString())
-    console.log("Comparison: nowIST.getTime() >= startUTC.getTime()", nowIST.getTime() >= startUTC.getTime())
-    console.log("Comparison: nowIST.getTime() <= endUTC.getTime()", nowIST.getTime() <= endUTC.getTime())
-
-    let newEventStatus: "not-started" | "live" | "ended" = "not-started"
-    let newTimeRemaining = 0
+    let newStatus: "not-started" | "live" | "ended" = "not-started"
 
     if (isEventLive(startsAt, endsAt)) {
-      newEventStatus = "live"
-      newTimeRemaining = getTimeUntilEnd(endsAt)
-      console.log("Event Status: LIVE")
+      newStatus = "live"
+      // Set live start time ONCE
+      if (!liveStartTime) {
+        setLiveStartTime(nowIST)
+        setCustomLiveCountdown(65 * 60 * 1000) // Reset to 1:05:00
+      }
     } else if (getTimeUntilStart(startsAt) > 0) {
-      newEventStatus = "not-started"
-      newTimeRemaining = getTimeUntilStart(startsAt)
-      console.log("Event Status: NOT STARTED")
+      newStatus = "not-started"
+      setLiveStartTime(null)
+      setCustomLiveCountdown(0)
     } else {
-      newEventStatus = "ended"
-      newTimeRemaining = 0
-      console.log("Event Status: ENDED")
+      newStatus = "ended"
+      setLiveStartTime(null)
+      setCustomLiveCountdown(0)
     }
 
-    setEventStatus(newEventStatus)
-    setTimeRemaining(newTimeRemaining)
+    setEventStatus(newStatus)
+  }, [currentTime, tables, liveStartTime])
 
-    console.log("Time Remaining:", formatTimeRemaining(timeRemaining))
-    console.log("-----------------------------")
-  }, [currentTime, tables])
-
-  if (tables.length === 0) {
-    return (
-      <div className="bg-black border-2 border-yellow-500 rounded-lg p-4 mb-6">
-        <div className="flex items-center gap-2 text-yellow-400">
-          <Clock className="h-5 w-5" />
-          <span>Loading event schedule...</span>
-        </div>
-      </div>
-    )
-  }
-
-  const firstTable = tables[0]
   const getStatusConfig = () => {
     switch (eventStatus) {
       case "live":
         return {
           icon: <Clock className="h-5 w-5 text-yellow-400" />,
           title: "🔴 LIVE BIDDING",
-          subtitle: `Event ends in: ${formatTimeRemaining(timeRemaining)}`,
+          subtitle: `Time remaining: ${formatTimeRemaining(customLiveCountdown)}`,
           description: "Bidding is currently active! Place your bids now.",
           pulseClass: "animate-pulse",
         }
       case "not-started":
+        const startIn = getTimeUntilStart(tables[0].bidding_starts_at)
         return {
           icon: <Calendar className="h-5 w-5 text-yellow-400" />,
           title: "⏰ BIDDING STARTS SOON",
-          subtitle: `Starts in: ${formatTimeRemaining(timeRemaining)}`,
+          subtitle: `Starts in: ${formatTimeRemaining(startIn)}`,
           description: "Get ready! Bidding will begin shortly.",
           pulseClass: "",
         }
@@ -127,11 +115,6 @@ export default function BiddingTimeStatus({ tables }: BiddingTimeStatusProps) {
         <p className="text-2xl font-bold text-yellow-300 mt-2">{config.subtitle}</p>
       </div>
       <div className="mt-2 text-sm text-yellow-200 text-center">{config.description}</div>
-      {/* Added for debugging: Display raw times */}
-      {/* <div className="mt-4 text-xs text-gray-500 text-center">
-        <p>DB Start: {firstTable.bidding_starts_at}</p>
-        <p>DB End: {firstTable.bidding_ends_at}</p>
-      </div> */}
     </div>
   )
 }

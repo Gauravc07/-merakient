@@ -23,7 +23,7 @@ export default function SimpleLoginForm() {
             <input
               id="username"
               name="username"
-              placeholder="user1"
+              placeholder="enter username"
               required
               className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-yellow-500"
             />
@@ -37,7 +37,7 @@ export default function SimpleLoginForm() {
               id="password"
               name="password"
               type="password"
-              placeholder="password1"
+              placeholder="enter password"
               required
               className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-yellow-500"
             />
