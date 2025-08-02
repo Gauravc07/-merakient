@@ -1,19 +1,11 @@
+"use client"
+
 import Image from "next/image"
 
-const galleryItems = [
-  { id: 1, type: "image", src: "/placeholder.svg?height=300&width=450", span: "col-span-2" },
-  { id: 2, type: "image", src: "/placeholder.svg?height=200&width=200", span: "" },
-  { id: 3, type: "image", src: "/placeholder.svg?height=250&width=300", span: "" },
-  { id: 4, type: "image", src: "/placeholder.svg?height=400&width=250", span: "row-span-2" },
-  { id: 5, type: "image", src: "/placeholder.svg?height=200&width=350", span: "" },
-  { id: 6, type: "image", src: "/placeholder.svg?height=350&width=250", span: "" },
-  { id: 7, type: "image", src: "/placeholder.svg?height=300&width=400", span: "col-span-2" },
-  { id: 8, type: "image", src: "/placeholder.svg?height=200&width=200", span: "" },
-  { id: 9, type: "image", src: "/placeholder.svg?height=250&width=300", span: "" },
-  { id: 10, type: "image", src: "/placeholder.svg?height=300&width=200", span: "" },
-  { id: 11, type: "image", src: "/placeholder.svg?height=280&width=380", span: "" },
-  { id: 12, type: "image", src: "/placeholder.svg?height=220&width=320", span: "" },
-]
+const galleryItems = Array.from({ length: 20 }, (_, i) => ({
+  id: i + 1,
+  src: `/placeholder.svg?height=${200 + (i % 5) * 30}&width=${250 + (i % 4) * 40}`,
+}))
 
 export default function GlimpseIntoOurEvents() {
   return (
@@ -27,18 +19,22 @@ export default function GlimpseIntoOurEvents() {
             Experience the grandeur and excitement of Meraki Entertainment's past creations.
           </p>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+
+        {/* Masonry-style layout */}
+        <div className="columns-2 sm:columns-2 md:columns-3 lg:columns-4 gap-0 space-y-0">
           {galleryItems.map((item) => (
             <div
               key={item.id}
-              className={`relative group overflow-hidden rounded-lg shadow-md border border-black-charcoal ${item.span}`}
+              className="mb-0 break-inside-avoid overflow-hidden rounded-md shadow-sm border border-black-charcoal"
             >
               <Image
-                src={item.src || "/placeholder.svg"}
+                src={item.src}
                 alt={`Event image ${item.id}`}
-                width={item.span.includes("col-span-2") ? 600 : 300}
-                height={item.span.includes("row-span-2") ? 400 : 200}
-                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                width={400}
+                height={300}
+                layout="responsive"
+                objectFit="cover"
+                className="transition-transform duration-300 hover:scale-105"
               />
             </div>
           ))}

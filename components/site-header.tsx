@@ -18,10 +18,16 @@ export default function SiteHeader() {
   }
 
   return (
-    <header className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-5xl rounded-2xl border border-black-charcoal bg-background/90 backdrop-blur-md">
+    <header className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-5xl rounded-2xl border border-black-charcoal bg-background/90 backdrop-blur-md ">
       <div className="container flex h-20 items-center justify-between px-4 md:px-6">
         {/* Left navigation links - Desktop */}
         <nav className="hidden md:flex items-center gap-8">
+          <Link
+            href="/contact-us"
+            className="text-lg font-oswald uppercase font-bold text-white hover:text-orange-light transition-colors"
+          >
+            Contact
+          </Link>
           <Link
             href="/#upcoming-events"
             scroll={true}
@@ -33,7 +39,7 @@ export default function SiteHeader() {
             href="/about-us"
             className="text-lg font-oswald uppercase font-bold text-white hover:text-orange-light transition-colors"
           >
-            About Us
+            About
           </Link>
         </nav>
 
@@ -62,12 +68,13 @@ export default function SiteHeader() {
           >
             Bidding
           </Link>
-          <Link
-            href="/contact-us"
+          
+          <Link 
             className="text-lg font-oswald uppercase font-bold text-white hover:text-orange-light transition-colors"
+             href="/calendar"
           >
-            Contact Us
-          </Link>
+          Calendar
+        </Link>
         </nav>
 
         {/* Mobile Menu Button */}

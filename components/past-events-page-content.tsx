@@ -1,151 +1,161 @@
 "use client"
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import Image from "next/image"
-import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog" // Import DialogTitle
+import { useEffect, useRef } from "react"
 
 const pastEventsData = [
   {
     id: 1,
     title: "The Beginning Chapter 01",
-    date: "February 02, 2025",
-    description: "Experience The Unthinkable. Featuring VDJ SHAAN - India's No #1 VDJ.",
     location: "THE MILLS, RAJA BAHADUR CITY CENTRE, DHOLE PATIL RD, PUNE",
-    image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-7U8WvwaKOCyGLhOXcujrVFSTPjkhdN.png",
+    description: "Experience The Unthinkable. Featuring VDJ SHAAN - India's No #1 VDJ.",
   },
   {
     id: 2,
     title: "Chapter 02: Life in the Dream House",
-    date: "March 08, 2025",
-    description: "Women's Day Special featuring HRJ & K-YASH. Dress Code: Pink and White.",
     location: "KOREGAON PARK ANNEXE, ONYX BUILDING, PUNE, MAHARASHTRA",
-    image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-eE0JYySuIlX8StjhHoeIxVeVcFz69I.png",
+    description: "Women's Day Special featuring HRJ & K-YASH. Dress Code: Pink and White.",
   },
   {
     id: 3,
     title: "Chapter 03: Meraki's Empire",
-    date: "April 13, 2025",
-    description: "Featuring STUVI B2B HAMSHYRE, Supporting Act: KNHALI.",
     location: "KOREGAON PARK ANNEX, JADHAV NAGAR, MUNDHWA, PUNE",
-    image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-whRrF93zYtTVh3z2K9ftO81gcmqUZO.png",
+    description: "Featuring STUVI B2B HAMSHYRE, Supporting Act: KNHALI.",
   },
   {
     id: 4,
     title: "The Asylum Wednesdays",
-    date: "May 28, 2025",
-    description: "Sound by DHYAN and ANTOOXKRAUTEK. Curated by Team Di Mora & Manav Khiani.",
     location: "DI MORA - PUNE",
-    image:
-      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/ASYLUM%20MAY%2028%20%282%29.png-bwJ1hWxGoZHdnWV5EwO7rTOYZwGcbo.jpeg",
+    description: "Sound by DHYAN and ANTOOXKRAUTEK. Curated by Team Di Mora & Manav Khiani.",
   },
   {
     id: 5,
     title: "Center Stage Saturday",
-    date: "May 24, 2025",
-    description: "Featuring SLAPJACK & KNHALI. Meraki Takes Over Penthouze.",
     location: "PENTHOUZE - PUNE",
-    image:
-      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Center%20Stage%20Sat%2024.05.25%2003.jpg-6dUflu8XuKjZUqzHuAfeNJ7dbUWxAG.jpeg",
+    description: "Featuring SLAPJACK & KNHALI. Meraki Takes Over Penthouze.",
   },
   {
     id: 6,
     title: "Bollywood Takeover",
-    date: "June 07, 2025",
-    description: "Featuring SUSHYOHAN - The Mashup Monarchs Duo. Hosted by Prathmesh Joshi & Omkar Patil.",
     location: "EPITOME - PUNE",
-    image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-CXDLROBzPGDrMQlnQtcRyc0mzeNnOJ.png",
+    description: "Featuring SUSHMAHAN - The Mashup Monarchs Duo. Hosted by Prathmesh Joshi & Omkar Patil.",
   },
   {
     id: 7,
     title: "KIKI's Amazonia 2.0: Dusk, With a Wild Twist",
-    date: "June 29, 2025",
+    location: "KIKI, B WING, 2ND FLOOR, THE MILLS - RAJA BAHADUR CITY CENTRE, PUNE",
     description:
       "India's No.1 Duo Performing PROBROS. Hosted by Devanshu Thite. Amazonia Special Decor, Fireworks, Live Acts.",
-    location: "KIKI, B WING, 2ND FLOOR, THE MILLS - RAJA BAHADUR CITY CENTRE, PUNE",
-    image:
-      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG_5358%20%282%29.PNG-ofoH50ZGu79TfzpueCVQOnvtA8xG9i.jpeg",
   },
   {
     id: 8,
     title: "House of Bollywood",
-    date: "July 05, 2025",
-    description: "Featuring DJ NAAIRO, also featuring K-YASH. Hosted by Arjun Shinde & Shreyas Bhandari.",
     location: "PENTHOUZE - PUNE",
-    image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-Nl4rdXKnGJj3OxkT39giK3LUeIFV8D.png",
+    description: "Featuring DJ NAAIRO, also featuring K-YASH. Hosted by Arjun Shinde & Shreyas Bhandari.",
   },
   {
     id: 9,
     title: "SIN CITY",
-    date: "July 13, 2025",
-    description: "Featuring TRUX. Hosted by Prakash Parmar, Mona Saraf, Chirag Bhagat and Sarang Angarkar.",
     location: "KIKI, B WING, 2ND FLOOR, THE MILLS - RAJA BAHADUR CITY CENTRE, PUNE",
-    image:
-      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/SIN%20CITY%20KIKI-IbCddTmhNFu1K6kWxGJhupBTkhj2rE.png",
+    description: "Featuring TRUX. Hosted by Prakash Parmar, Mona Saraf, Chirag Bhagat and Sarang Angarkar.",
   },
   {
-    id: 10, // Added as the 10th event
+    id: 10,
     title: "KIKI LAND",
-    date: "July 20, 2025", // Adjusted date format for consistency
+    location: "KIKI, B WING, 2ND FLOOR, THE MILLS - RAJA BAHADUR CITY CENTRE, PUNE",
     description: "Feat. Neel Chhabra, RAOS, Siaara, DJ NYX",
-    location: "KIKI, B WING, 2ND FLOOR, THE MILLS - RAJA BAHADUR CITY CENTRE, PUNE", // Inferred from the image
-    image: "/images/kikiland1.jpg", // New image added
+  },
+  {
+    id: 11,
+    title: "THE KING OF GOOD TIMES",
+    location: "KIKI, B WING, 2ND FLOOR, THE MILLS - RAJA BAHADUR CITY CENTRE, PUNE",
+    description: "Feat. KNALI AND HRUTVIK",
   },
 ]
 
 export default function PastEventsPageContent() {
+  const videoRef = useRef<HTMLVideoElement>(null)
+
+  useEffect(() => {
+    // Auto-play video when component mounts
+    if (videoRef.current) {
+      videoRef.current.play().catch(console.error)
+    }
+  }, [])
+
   return (
-    <section id="past-events-page" className="w-full py-16 md:py-24 lg:py-32 bg-background">
-      <div className="container px-4 md:px-6">
-        <div className="text-center space-y-4 mb-12">
-          <h2 className="font-serif text-4xl md:text-5xl font-bold text-platinum-gradient">Our Past Events</h2>
-          <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
-            Relive the magic of our most memorable events, meticulously crafted and flawlessly executed.
-          </p>
+    <div className="relative min-h-screen w-full overflow-hidden bg-black">
+      {/* Background Video */}
+      <video
+        ref={videoRef}
+        className="absolute inset-0 w-full h-full object-cover opacity-40"
+        autoPlay
+        muted
+        loop
+        playsInline
+      >
+        <source src= "/videos/PastMoments.mp4" type="video/mp4" />
+        {/* Fallback background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-800" />
+      </video>
+
+      {/* Dark overlay for better text readability */}
+      <div className="absolute inset-0 bg-black/50" />
+
+      {/* Content Container */}
+      <div className="relative z-10 min-h-screen flex">
+        {/* Left Side - Scrolling Event Names */}
+        <div className="w-1/2 p-8 flex flex-col justify-center">
+          <div className="space-y-6 animate-scroll">
+            {pastEventsData.map((event, index) => (
+              <div
+                key={event.id}
+                className={`transition-all duration-500 ${
+                  index % 3 === 0 ? "text-white" : index % 3 === 1 ? "text-gray-400" : "text-gray-600"
+                }`}
+                style={{
+                  fontSize:
+                    index % 4 === 0 ? "3.5rem" : index % 4 === 1 ? "2.5rem" : index % 4 === 2 ? "2rem" : "1.5rem",
+                  fontWeight: index % 3 === 0 ? "bold" : "normal",
+                  lineHeight: "1.2",
+                  marginBottom: index % 4 === 0 ? "2rem" : "1rem",
+                }}
+              >
+                {event.title}
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="grid grid-cols-1 gap-12">
-          {pastEventsData.map((event) => (
-            <Card
-              key={event.id}
-              className="overflow-hidden shadow-silver hover:shadow-lg transition-shadow duration-300 bg-card border border-black-charcoal"
-            >
-              <Dialog>
-                <DialogTrigger asChild>
-                  <div className="relative w-full h-64 overflow-hidden cursor-pointer">
-                    <Image
-                      src={event.image || "/placeholder.svg"}
-                      alt={event.title}
-                      fill
-                      style={{ objectFit: "cover" }}
-                      quality={100}
-                      className="transition-transform duration-300 hover:scale-105"
-                    />
-                  </div>
-                </DialogTrigger>
-                <DialogContent className="max-w-4xl p-0 bg-transparent border-none">
-                  {/* Added DialogTitle for accessibility, visually hidden */}
-                  <DialogTitle className="sr-only">{`Image of ${event.title}`}</DialogTitle>
-                  <Image
-                    src={event.image || "/placeholder.svg"}
-                    alt={event.title}
-                    width={1200}
-                    height={800}
-                    style={{ objectFit: "contain", width: "100%", height: "auto" }}
-                    className="max-h-[90vh] mx-auto"
-                  />
-                </DialogContent>
-              </Dialog>
-              <CardHeader>
-                <CardTitle className="font-serif text-2xl text-orange-light">{event.title}</CardTitle>
-                <CardDescription className="text-muted-foreground">{event.date}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-foreground">{event.description}</p>
-                <p className="text-sm text-muted-foreground mt-2">Location: {event.location}</p>
-              </CardContent>
-            </Card>
+
+        {/* Right Side - Event Details */}
+        <div className="w-1/2 p-8 flex flex-col justify-center space-y-8">
+          {pastEventsData.map((event, index) => (
+            <div key={`details-${event.id}`} className="opacity-70 hover:opacity-100 transition-opacity duration-300">
+              <div className="text-gray-300 text-sm mb-2">{event.location}</div>
+              <div className="text-gray-400 text-sm">{event.description}</div>
+            </div>
           ))}
         </div>
       </div>
-    </section>
+
+      {/* Custom CSS for scrolling animation */}
+      <style jsx>{`
+        @keyframes scroll {
+          0% {
+            transform: translateY(100vh);
+          }
+          100% {
+            transform: translateY(-100%);
+          }
+        }
+        
+        .animate-scroll {
+          animation: scroll 30s linear infinite;
+        }
+        
+        .animate-scroll:hover {
+          animation-play-state: paused;
+        }
+      `}</style>
+    </div>
   )
 }

@@ -388,6 +388,110 @@ export default function DynamicTableLayout({
         onTableSelect={onTableSelect}
         currentUser={currentUser}
       />
+      <LayoutElement
+  id="vip9"
+  position={{ top: "28%", left: "5%" }}
+  category="VIP"
+  pax="6-8"
+  tables={tables}
+  hoveredTable={hoveredTable}
+  selectedTable={selectedTable}
+  onTableHover={onTableHover}
+  onTableSelect={onTableSelect}
+  currentUser={currentUser}
+/>
+
+<LayoutElement
+  id="vip10"
+  position={{ top: "28%", left: "16%" }}
+  category="VIP"
+  pax="6-8"
+  tables={tables}
+  hoveredTable={hoveredTable}
+  selectedTable={selectedTable}
+  onTableHover={onTableHover}
+  onTableSelect={onTableSelect}
+  currentUser={currentUser}
+/>
+
+<LayoutElement
+  id="vip11"
+  position={{ top: "28%", left: "27%" }}
+  category="VIP"
+  pax="6-8"
+  tables={tables}
+  hoveredTable={hoveredTable}
+  selectedTable={selectedTable}
+  onTableHover={onTableHover}
+  onTableSelect={onTableSelect}
+  currentUser={currentUser}
+/>
+
+<LayoutElement
+  id="vip12"
+  position={{ top: "28%", left: "38%" }}
+  category="VIP"
+  pax="6-8"
+  tables={tables}
+  hoveredTable={hoveredTable}
+  selectedTable={selectedTable}
+  onTableHover={onTableHover}
+  onTableSelect={onTableSelect}
+  currentUser={currentUser}
+/>
+
+<LayoutElement
+  id="vip13"
+  position={{ top: "28%", left: "49%" }}
+  category="VIP"
+  pax="6-8"
+  tables={tables}
+  hoveredTable={hoveredTable}
+  selectedTable={selectedTable}
+  onTableHover={onTableHover}
+  onTableSelect={onTableSelect}
+  currentUser={currentUser}
+/>
+
+<LayoutElement
+  id="vip14"
+  position={{ top: "28%", left: "60%" }}
+  category="VIP"
+  pax="6-8"
+  tables={tables}
+  hoveredTable={hoveredTable}
+  selectedTable={selectedTable}
+  onTableHover={onTableHover}
+  onTableSelect={onTableSelect}
+  currentUser={currentUser}
+/>
+
+<LayoutElement
+  id="vip15"
+  position={{ top: "28%", left: "71%" }}
+  category="VIP"
+  pax="6-8"
+  tables={tables}
+  hoveredTable={hoveredTable}
+  selectedTable={selectedTable}
+  onTableHover={onTableHover}
+  onTableSelect={onTableSelect}
+  currentUser={currentUser}
+/>
+
+<LayoutElement
+  id="vip16"
+  position={{ top: "28%", left: "82%" }}
+  category="VIP"
+  pax="6-8"
+  tables={tables}
+  hoveredTable={hoveredTable}
+  selectedTable={selectedTable}
+  onTableHover={onTableHover}
+  onTableSelect={onTableSelect}
+  currentUser={currentUser}
+/>
+
 
       {/* New static labels at the bottom */}
       {/* <LayoutElement

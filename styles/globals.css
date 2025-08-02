@@ -1,11 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Notable&display=swap');
 
 body {
   font-family: Arial, Helvetica, sans-serif;
 }
-
+.notable {
+  font-family: 'Notable', sans-serif;
+}
 @layer utilities {
   .text-balance {
     text-wrap: balance;

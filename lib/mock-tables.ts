@@ -6,7 +6,7 @@ import type { Table } from "@/lib/supabase"
  */
 export const mockTables: Table[] = [
   // VIP tables
-  ...Array.from({ length: 8 }, (_, i) => {
+  ...Array.from({ length: 16 }, (_, i) => {
     const id = `vip${i + 1}`
     return {
       id,
