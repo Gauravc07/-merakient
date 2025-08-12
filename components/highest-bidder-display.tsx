@@ -34,7 +34,11 @@ export default function HighestBidderDisplay({ tables, loading, error }: Highest
           src="/images/kingfisher-plane.png"
           alt="Kingfisher Plane Background"
           fill
-          style={{ objectFit: "cover" }}
+  style={{
+     // Show the full image without cropping
+    transform: "scale(1)", // Zoom out by scaling down
+    transformOrigin: "center", // Keep it centered
+  }}
           quality={100}
           className="opacity-10" // Adjust opacity to ensure text readability
         />

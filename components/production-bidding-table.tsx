@@ -9,11 +9,11 @@ import BiddingTimeStatus from "./bidding-time-status"
 import BidLoadingOverlay from "./bid-loading-overlay"
 import DynamicTableLayout from "./dynamic-table-layout"
 import HighestBidderDisplay from "./highest-bidder-display"
-import BidDialog from "./bid-dialog" // Import the new BidDialog
+import BidDialog from "./bid-dialog"
 
 interface ProductionBiddingTableProps {
   currentUser?: string
-  isSpectator?: boolean // New prop
+  isSpectator?: boolean
 }
 
 export default function ProductionBiddingTable({
@@ -21,7 +21,7 @@ export default function ProductionBiddingTable({
   isSpectator = false,
 }: ProductionBiddingTableProps) {
   const { tables, recentBids, loading, error, placeBid, refetch } = useRealtimeBidding()
-  const [selectedTableId, setSelectedTableId] = useState<string | null>(null) // Renamed for clarity
+  const [selectedTableId, setSelectedTableId] = useState<string | null>(null)
   const [hoveredTable, setHoveredTable] = useState<string | null>(null)
   const [isPlacingBid, setIsPlacingBid] = useState(false)
 
@@ -29,35 +29,25 @@ export default function ProductionBiddingTable({
 
   const handlePlaceBid = async (tableId: string, bidAmount: number) => {
     if (isSpectator) {
-      // Prevent bidding if in spectator mode
-      // This error will be handled by the BidDialog
       return { success: false, error: "You are in spectator mode and cannot place bids." }
     }
 
     setIsPlacingBid(true)
 
-    console.log("Placing bid:", { tableId, bidAmount })
-
-    // Add a minimum delay to show the animation
     const [result] = await Promise.all([
       placeBid(tableId, bidAmount),
-      new Promise((resolve) => setTimeout(resolve, 2000)), // Minimum 2 seconds to show animation
+      new Promise((resolve) => setTimeout(resolve, 2000)),
     ])
 
-    console.log("Bid result:", result)
-
     if (result.success) {
-      setSelectedTableId(null) // Close dialog on success
-      // Force an additional refresh to ensure UI updates
+      setSelectedTableId(null)
       setTimeout(() => {
         refetch()
       }, 500)
-    } else {
-      // Error will be handled by BidDialog
     }
 
     setIsPlacingBid(false)
-    return result // Return result for BidDialog to handle
+    return result
   }
 
   const getCategoryColor = (category: string) => {
@@ -71,17 +61,15 @@ export default function ProductionBiddingTable({
       case "Silver":
         return "bg-gray-300"
       case "VIP":
-        return "bg-purple-800" // Added for VIP tables
+        return "bg-purple-800"
       case "Standing":
-        return "bg-blue-600" // Added for Standing tables
+        return "bg-blue-600"
       default:
         return "bg-gray-500"
     }
   }
 
-  // Manual refresh function - keep the function but remove the button
   const handleManualRefresh = () => {
-    console.log("Manual refresh triggered")
     refetch()
   }
 
@@ -107,16 +95,14 @@ export default function ProductionBiddingTable({
 
   return (
     <>
-      {/* Bid Loading Overlay */}
       <BidLoadingOverlay isVisible={isPlacingBid} />
 
-      {/* Bid Dialog */}
       <BidDialog
         table={currentSelectedTableData}
         currentUser={currentUser}
-        isOpen={!!selectedTableId} // Open if a table is selected
+        isOpen={!!selectedTableId}
         onOpenChange={(open) => {
-          if (!open) setSelectedTableId(null) // Close dialog
+          if (!open) setSelectedTableId(null)
         }}
         onPlaceBid={handlePlaceBid}
         isPlacingBid={isPlacingBid}
@@ -125,33 +111,39 @@ export default function ProductionBiddingTable({
       <section className="w-full py-6 md:py-8 lg:py-12 bg-black">
         <div className="container px-4 md:px-6">
           <div className="text-center space-y-4 mb-8">
-            <h2 className="font-serif text-4xl md:text-5xl font-bold text-gold-gradient">
-              Welcome the King of Good Times
+            <h2 className="font-serif text-4xl md:text-5xl font-bold text-gold-gradient inline-flex items-center gap-3">
+              <img
+                src="/images/meraki-logo.png"
+                alt="Logo Before"
+                className="h-[1em] w-auto"
+              />
+              Meraki X MK
+              <img
+                src="/images/ti-logo.png"
+                alt="Logo After"
+                className="h-[1em] w-auto"
+              />
             </h2>
           </div>
-          {/* Bidding Time Status */}
+
           <BiddingTimeStatus tables={tables} />
-          {/* Highest Bidder Display */}
-          <HighestBidderDisplay tables={tables} loading={loading} error={error} /> {/* Pass props here */}
+          <HighestBidderDisplay tables={tables} loading={loading} error={error} />
+
           <div className="space-y-6">
-            {/* Main content: DynamicTableLayout on left, Live Bidding Activity on right */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {/* Left Column: Dynamic Table Layout */}
               <div>
                 <DynamicTableLayout
                   tables={tables}
                   hoveredTable={hoveredTable}
-                  selectedTable={selectedTableId} // Pass selectedTableId
+                  selectedTable={selectedTableId}
                   onTableHover={setHoveredTable}
-                  onTableSelect={setSelectedTableId} // Update selectedTableId on click
+                  onTableSelect={setSelectedTableId}
                   currentUser={currentUser}
                 />
               </div>
 
-              {/* Right Column: Live Bidding Activity */}
               <div className="space-y-4">
                 <Card className="bg-card-overlay border-black-charcoal h-full">
-                  {/* Added h-full */}
                   <CardHeader>
                     <CardTitle className="text-platinum-gradient flex items-center gap-2">
                       Live Bidding Activity ({recentBids.length})
@@ -160,7 +152,6 @@ export default function ProductionBiddingTable({
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-2 max-h-[500px] overflow-y-auto">
-                      {/* Adjusted max-height */}
                       {recentBids.map((bid, index) => (
                         <div key={bid.id || index} className="flex justify-between items-center text-sm">
                           <span className="text-foreground">

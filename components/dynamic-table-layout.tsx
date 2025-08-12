@@ -181,7 +181,7 @@ export default function DynamicTableLayout({
       {/* Top Row - VIP and Standing Tables */}
       <LayoutElement
         id="vip1"
-        position={{ top: "10%", left: "10%", width: "50px", height: "70px" }}
+        position={{ top: "4%", left: "7%", width: "70px", height: "40px" }}
         category="VIP"
         pax="6-8"
         tables={tables}
@@ -193,10 +193,10 @@ export default function DynamicTableLayout({
       />
       <LayoutElement
         id="standing2"
-        position={{ top: "20%", left: "30%", width: "50px", height: "50px" }}
+        position={{ top: "34%", left: "22%", width: "30px", height: "60px" }}
         category="Standing"
         pax="5"
-        shape="circle"
+        shape="rectangle"
         tables={tables}
         hoveredTable={hoveredTable}
         selectedTable={selectedTable}
@@ -206,7 +206,7 @@ export default function DynamicTableLayout({
       />
       <LayoutElement
         id="standing3"
-        position={{ top: "20%", left: "51%", width: "50px", height: "50px" }}
+        position={{ top: "10%", left: "89%", width: "30px", height: "30px" }}
         category="Standing"
         pax="5"
         shape="circle"
@@ -219,7 +219,7 @@ export default function DynamicTableLayout({
       />
       <LayoutElement
         id="vip2"
-        position={{ top: "10%", left: "75%", width: "50px", height: "70px" }}
+        position={{ top: "4%", left: "68%", width: "70px", height: "40px" }}
         category="VIP"
         pax="6-8"
         tables={tables}
@@ -233,7 +233,7 @@ export default function DynamicTableLayout({
       {/* Mid-Left and Mid-Right VIP Tables */}
       <LayoutElement
         id="vip3"
-        position={{ top: "30%", left: "10%", width: "50px", height: "70px" }}
+        position={{ top: "32%", left: "7%", width: "30px", height: "90px" }}
         category="VIP"
         pax="6-8"
         tables={tables}
@@ -245,7 +245,7 @@ export default function DynamicTableLayout({
       />
       <LayoutElement
         id="vip7"
-        position={{ top: "30%", left: "75%", width: "50px", height: "70px" }}
+        position={{ top: "34%", left: "72%", width: "30px", height: "60px" }}
         category="VIP"
         pax="6-8"
         tables={tables}
@@ -259,8 +259,8 @@ export default function DynamicTableLayout({
       {/* Console and Bar (Oval shapes) */}
       <LayoutElement
         id="console"
-        position={{ top: "45%", left: "6%", width: "40px", height: "80px" }}
-        shape="oval"
+        position={{ top: "2%", left: "33%", width: "100px", height: "60px" }}
+        shape="rectangle"
         label="CONSOLE"
         isStaticLabel={true} // Mark as static label
         tables={tables}
@@ -272,8 +272,8 @@ export default function DynamicTableLayout({
       />
       <LayoutElement
         id="bar-oval"
-        position={{ top: "45%", left: "78%", width: "120px", height: "80px" }}
-        shape="oval"
+        position={{ top: "85%", left: "15%", width: "230px", height: "50px" }}
+        shape="rectangle"
         label="BAR"
         isStaticLabel={true} // Mark as static label
         tables={tables}
@@ -287,7 +287,7 @@ export default function DynamicTableLayout({
       {/* Lower-Left VIP Tables */}
       <LayoutElement
         id="vip5"
-        position={{ top: "60%", left: "10%", width: "50px", height: "70px" }}
+        position={{ top: "50%", left: "7%", width: "30px", height: "90px" }}
         category="VIP"
         pax="6-8"
         tables={tables}
@@ -299,7 +299,7 @@ export default function DynamicTableLayout({
       />
       <LayoutElement
         id="vip6"
-        position={{ top: "75%", left: "10%", width: "50px", height: "70px" }}
+        position={{ top: "68%", left: "7%", width: "30px", height: "90px" }}
         category="VIP"
         pax="6-8"
         tables={tables}
@@ -313,10 +313,10 @@ export default function DynamicTableLayout({
       {/* Lower-Right Standing and VIP Tables */}
       <LayoutElement
         id="standing1"
-        position={{ top: "60%", left: "40%", width: "50px", height: "50px" }}
+        position={{ top: "52%", left: "22%", width: "30px", height: "60px" }}
         category="Standing"
         pax="5"
-        shape="circle"
+        shape="rectangle"
         tables={tables}
         hoveredTable={hoveredTable}
         selectedTable={selectedTable}
@@ -327,7 +327,7 @@ export default function DynamicTableLayout({
       {/* New VIP table (vip4) placed above standing4 */}
       <LayoutElement
         id="vip4"
-        position={{ top: "60%", left: "75%", width: "50px", height: "70px" }}
+        position={{ top: "52%", left: "72%", width: "30px", height: "60px" }}
         category="VIP"
         pax="6-8"
         tables={tables}
@@ -339,7 +339,7 @@ export default function DynamicTableLayout({
       />
       <LayoutElement
         id="vip8"
-        position={{ top: "75%", left: "43%", width: "50px", height: "70px" }}
+        position={{ top: "70%", left: "22%", width: "30px", height: "60px" }}
         category="VIP"
         pax="6-8"
         tables={tables}
@@ -351,10 +351,10 @@ export default function DynamicTableLayout({
       />
       <LayoutElement
         id="standing4"
-        position={{ top: "77%", left: "75%", width: "50px", height: "50px" }}
+        position={{ top: "70%", left: "72%", width: "30px", height: "60px" }}
         category="Standing"
         pax="5"
-        shape="circle"
+        shape="rectangle"
         tables={tables}
         hoveredTable={hoveredTable}
         selectedTable={selectedTable}
@@ -362,9 +362,27 @@ export default function DynamicTableLayout({
         onTableSelect={onTableSelect}
         currentUser={currentUser}
       />
+<div
+  className="absolute top-[48%] left-[-14%] -translate-y-1/2 -rotate-90 text-yellow-400 font-normal tracking-wide text-sm opacity-50 pointer-events-none"
+>
+  ELEVATED SECTION
+</div>
+<div
+  className="absolute top-[48%] left-[78%] -translate-y-1/2 -rotate-90 text-yellow-400 font-normal tracking-wide text-sm opacity-50 pointer-events-none whitespace-nowrap"
+>
+  ELEVATED SECTION
+</div>
+
+<div
+  className="absolute top-[70%] left-1/2 -translate-x-1/2 text-yellow-400 font-normal tracking-wide text-sm opacity-50 pointer-events-none"
+>
+  DANCE FLOOR
+</div>
+
+
 
       {/* Entry points */}
-      <LayoutElement
+      {/* <LayoutElement
         id="entry-top-right"
         position={{ top: "23%", right: "0%", width: "80px", height: "30px" }}
         label="ENTRY"
@@ -387,10 +405,10 @@ export default function DynamicTableLayout({
         onTableHover={onTableHover}
         onTableSelect={onTableSelect}
         currentUser={currentUser}
-      />
+      /> */}
       <LayoutElement
   id="vip9"
-  position={{ top: "28%", left: "5%" }}
+  position={{ top: "20%", left: "7%", width: "30px", height: "50px" }}
   category="VIP"
   pax="6-8"
   tables={tables}
@@ -403,7 +421,7 @@ export default function DynamicTableLayout({
 
 <LayoutElement
   id="vip10"
-  position={{ top: "28%", left: "16%" }}
+  position={{ top: "20%", left: "85%", width: "30px", height: "50px" }}
   category="VIP"
   pax="6-8"
   tables={tables}
@@ -416,7 +434,7 @@ export default function DynamicTableLayout({
 
 <LayoutElement
   id="vip11"
-  position={{ top: "28%", left: "27%" }}
+  position={{ top: "32%", left: "85%", width: "30px", height: "90px" }}
   category="VIP"
   pax="6-8"
   tables={tables}
@@ -429,7 +447,7 @@ export default function DynamicTableLayout({
 
 <LayoutElement
   id="vip12"
-  position={{ top: "28%", left: "38%" }}
+  position={{ top: "50%", left: "85%", width: "30px", height: "90px" }}
   category="VIP"
   pax="6-8"
   tables={tables}
@@ -442,7 +460,7 @@ export default function DynamicTableLayout({
 
 <LayoutElement
   id="vip13"
-  position={{ top: "28%", left: "49%" }}
+  position={{ top: "68%", left: "85%", width: "30px", height: "90px" }}
   category="VIP"
   pax="6-8"
   tables={tables}
@@ -455,7 +473,7 @@ export default function DynamicTableLayout({
 
 <LayoutElement
   id="vip14"
-  position={{ top: "28%", left: "60%" }}
+  position={{ top: "35%", left: "44%", width: "30px", height: "60px" }}
   category="VIP"
   pax="6-8"
   tables={tables}
@@ -468,7 +486,7 @@ export default function DynamicTableLayout({
 
 <LayoutElement
   id="vip15"
-  position={{ top: "28%", left: "71%" }}
+  position={{ top: "35%", left: "54%", width: "30px", height: "60px" }}
   category="VIP"
   pax="6-8"
   tables={tables}
@@ -479,7 +497,7 @@ export default function DynamicTableLayout({
   currentUser={currentUser}
 />
 
-<LayoutElement
+{/* <LayoutElement
   id="vip16"
   position={{ top: "28%", left: "82%" }}
   category="VIP"
@@ -490,7 +508,7 @@ export default function DynamicTableLayout({
   onTableHover={onTableHover}
   onTableSelect={onTableSelect}
   currentUser={currentUser}
-/>
+/> */}
 
 
       {/* New static labels at the bottom */}
