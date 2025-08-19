@@ -9,7 +9,7 @@ export default function BrandStorySection() {
       {/* Background image */}
       <div className="absolute inset-0">
         <Image
-          src="/images/kingfisher-plane.png"
+          src="/images/gg90.jpg"
           alt="Meraki Entertainment Brand Story Background"
           fill
           className="object-cover"
