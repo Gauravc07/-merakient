@@ -124,6 +124,10 @@ export default function ProductionBiddingTable({
                 className="h-[1em] w-auto"
               />
             </h2>
+            <h3 className="text-lg md:text-xl font-semibold text-yellow-400">
+    Meraki x Dimora x Ti
+  </h3>
+           
           </div>
 
           <BiddingTimeStatus tables={tables} />
