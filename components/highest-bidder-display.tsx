@@ -45,7 +45,7 @@ export default function HighestBidderDisplay({ tables, loading, error }: Highest
       </div>
       <CardHeader className="text-center">
         <div className="flex items-center justify-center mb-2">
-          <Crown className="h-8 w-8 text-yellow-400" />
+          {/* <Crown className="h-8 w-8 text-yellow-400" /> */}
         </div>
         <CardTitle className="text-platinum-gradient text-center">Highest Bidder of the Day</CardTitle>
       </CardHeader>

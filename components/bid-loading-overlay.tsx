@@ -37,7 +37,7 @@ export default function BidLoadingOverlay({ isVisible }: BidLoadingOverlayProps)
               alt="King of Good Times"
               width={200}
               height={200}
-              className="mx-auto drop-shadow-2xl"
+              className="mx-auto drop-shadow-5xl"
             />
           </div>
 
@@ -48,7 +48,7 @@ export default function BidLoadingOverlay({ isVisible }: BidLoadingOverlayProps)
         {/* Loading text with animated dots */}
         <div className="space-y-4">
           <h2 className="text-3xl md:text-4xl font-bold text-gold-gradient">Placing Your Bid{dots}</h2>
-          <p className="text-xl text-yellow-300 animate-pulse">The King is securing your table!</p>
+          <p className="text-xl text-yellow-300 animate-pulse">Your table’s taken care of. Respect.</p>
         </div>
 
         {/* Animated loading bar */}

@@ -117,9 +117,9 @@ export default function ProductionBiddingTable({
                 alt="Logo Before"
                 className="h-[1em] w-auto"
               />
-              Meraki X MK
+              Meraki 
               <img
-                src="/images/ti-logo.png"
+                src="/images/meraki-logo.png"
                 alt="Logo After"
                 className="h-[1em] w-auto"
               />
