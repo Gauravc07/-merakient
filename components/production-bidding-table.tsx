@@ -121,7 +121,7 @@ export default function ProductionBiddingTable({
   <span className="text-yellow-400 text-xl md:text-2xl font-semibold">x</span>
   <img src="/images/di_mora_logo.png" alt="Dimora Logo" className="h-16 md:h-20 w-auto" />
   <span className="text-yellow-400 text-xl md:text-2xl font-semibold">x</span>
-  <img src="/images/ti_white.png" alt="Ti Logo" className="h-20 md:h-20 w-auto" />
+  <img src="/images/ti_white.png" alt="Ti Logo" className="h-16 md:h-20 w-auto" />
 </div>
 
 
