@@ -112,21 +112,19 @@ export default function ProductionBiddingTable({
         <div className="container px-4 md:px-6">
           <div className="text-center space-y-4 mb-8">
             <h2 className="font-serif text-4xl md:text-5xl font-bold text-gold-gradient inline-flex items-center gap-3">
-              <img
-                src="/images/meraki-logo.png"
-                alt="Logo Before"
-                className="h-[1em] w-auto"
-              />
+              
               Meraki 
-              <img
-                src="/images/meraki-logo.png"
-                alt="Logo After"
-                className="h-[1em] w-auto"
-              />
+              
             </h2>
-            <h3 className="text-lg md:text-xl font-semibold text-yellow-400">
-    Meraki x Dimora x Ti
-  </h3>
+            <div className="flex items-center justify-center gap-4">
+  <img src="/images/meraki-logo.png" alt="Meraki Logo" className="h-16 md:h-20 w-auto" />
+  <span className="text-yellow-400 text-xl md:text-2xl font-semibold">x</span>
+  <img src="/images/di_mora_logo.png" alt="Dimora Logo" className="h-16 md:h-20 w-auto" />
+  <span className="text-yellow-400 text-xl md:text-2xl font-semibold">x</span>
+  <img src="/images/ti_white.png" alt="Ti Logo" className="h-20 md:h-20 w-auto" />
+</div>
+
+
            
           </div>
 
