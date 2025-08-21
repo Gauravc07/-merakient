@@ -32,7 +32,7 @@ export default function BidDialog({
 
   useEffect(() => {
     if (isOpen && table && !initialBidSetRef.current) {
-      setCustomBid((table.current_bid + 1000).toString())
+      setCustomBid((table.current_bid + 10000).toString())
       setBidError("")
       initialBidSetRef.current = true
     } else if (!isOpen) {
@@ -46,7 +46,7 @@ export default function BidDialog({
     if (!table) return
 
     const bidAmount = Number.parseInt(customBid)
-    const minimumBid = table.current_bid + 1000
+    const minimumBid = table.current_bid + 10000
 
     if (!customBid || isNaN(bidAmount)) {
       setBidError("Please enter a valid bid amount")
@@ -54,7 +54,7 @@ export default function BidDialog({
     }
 
     if (bidAmount < minimumBid) {
-      setBidError(`Bid must be at least ₹${minimumBid.toLocaleString()} (₹1000 more than current bid)`)
+      setBidError(`Bid must be at least ₹${minimumBid.toLocaleString()} (₹10000 more than current bid)`)
       return
     }
 
@@ -106,12 +106,12 @@ export default function BidDialog({
         <div className="grid gap-4 py-4">
           <div className="space-y-2">
             <Label htmlFor="bid-amount" className="text-sm text-foreground">
-              Enter Your Bid (Min: ₹{(table.current_bid + 1000).toLocaleString()})
+              Enter Your Bid (Min: ₹{(table.current_bid + 10000).toLocaleString()})
             </Label>
             <Input
               id="bid-amount"
               type="text"
-              placeholder={`${table.current_bid + 1000}`}
+              placeholder={`${table.current_bid + 10000}`}
               value={customBid}
               onChange={(e) => setCustomBid(e.target.value)}
               className="bg-background border-yellow-500/50 text-foreground"

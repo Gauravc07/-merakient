@@ -6,7 +6,6 @@ import {
   formatTimeRemaining,
   isEventLive,
   getTimeUntilStart,
-  getTimeUntilEnd,
   getISTTime,
 } from "@/utils/time-helpers"
 
@@ -21,55 +20,50 @@ export default function BiddingTimeStatus({ tables }: BiddingTimeStatusProps) {
   const [currentTime, setCurrentTime] = useState(new Date())
   const [eventStatus, setEventStatus] = useState<"not-started" | "live" | "ended">("not-started")
   const [customLiveCountdown, setCustomLiveCountdown] = useState<number>(0)
-  const [liveStartTime, setLiveStartTime] = useState<Date | null>(null)
 
-  // Timer tick every second
+  // Tick every second
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date())
 
-      // When in LIVE mode, count down from 1:05:00
-      if (eventStatus === "live" && liveStartTime) {
-        const elapsed = new Date().getTime() - liveStartTime.getTime()
-        const remaining = 65 * 60 * 1000 - elapsed // 1 hr 5 min in ms
+      if (tables.length > 0 && eventStatus === "live") {
+        const startsAt = new Date(tables[0].bidding_starts_at).getTime()
+        const elapsed = new Date().getTime() - startsAt
+        const remaining = 185 * 60 * 1000 - elapsed // 3h 05m
         setCustomLiveCountdown(Math.max(remaining, 0))
       }
     }, 1000)
 
     return () => clearInterval(timer)
-  }, [eventStatus, liveStartTime])
+  }, [eventStatus, tables])
 
-  // Initial event state
+  // Detect event state
   useEffect(() => {
     if (tables.length === 0) return
 
-    const firstTable = tables[0]
-    const startsAt = firstTable.bidding_starts_at
-    const endsAt = firstTable.bidding_ends_at
-
-    const nowIST = getISTTime()
+    const startsAt = tables[0].bidding_starts_at
+    const endsAt = tables[0].bidding_ends_at
 
     let newStatus: "not-started" | "live" | "ended" = "not-started"
 
     if (isEventLive(startsAt, endsAt)) {
       newStatus = "live"
-      // Set live start time ONCE
-      if (!liveStartTime) {
-        setLiveStartTime(nowIST)
-        setCustomLiveCountdown(65 * 60 * 1000) // Reset to 1:05:00
-      }
+
+      // Compute remaining immediately on mount
+      const startsAtTime = new Date(startsAt).getTime()
+      const elapsed = new Date().getTime() - startsAtTime
+      const remaining = 185 * 60 * 1000 - elapsed
+      setCustomLiveCountdown(Math.max(remaining, 0))
     } else if (getTimeUntilStart(startsAt) > 0) {
       newStatus = "not-started"
-      setLiveStartTime(null)
       setCustomLiveCountdown(0)
     } else {
       newStatus = "ended"
-      setLiveStartTime(null)
       setCustomLiveCountdown(0)
     }
 
     setEventStatus(newStatus)
-  }, [currentTime, tables, liveStartTime])
+  }, [currentTime, tables])
 
   const getStatusConfig = () => {
     switch (eventStatus) {

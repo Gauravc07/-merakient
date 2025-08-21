@@ -69,12 +69,12 @@ export default function SiteHeader() {
             Bidding
           </Link>
           
-          <Link 
+          {/* <Link 
             className="text-lg font-oswald uppercase font-bold text-white hover:text-orange-light transition-colors"
              href="/calendar"
           >
           Calendar
-        </Link>
+        </Link> */}
         </nav>
 
         {/* Mobile Menu Button */}
