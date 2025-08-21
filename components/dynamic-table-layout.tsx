@@ -207,19 +207,19 @@ export default function DynamicTableLayout({
         onTableSelect={onTableSelect}
         currentUser={currentUser}
       />
-      {/* <LayoutElement
-        id="standing3"
-        position={{ top: "10%", left: "89%", width: "30px", height: "30px" }}
-        category="Standing"
+      <LayoutElement
+        id="A4"
+        position={{ top: "15%", left: "85%", width: "30px", height: "30px" }}
+        category="VIP"
         pax="5"
-        shape="circle"
+        shape="rectangle"
         tables={tables}
         hoveredTable={hoveredTable}
         selectedTable={selectedTable}
         onTableHover={onTableHover}
         onTableSelect={onTableSelect}
         currentUser={currentUser}
-      /> */}
+      />
       <LayoutElement
         id="A5"
         position={{ top: "8%", left: "68%", width: "70px", height: "40px" }}
