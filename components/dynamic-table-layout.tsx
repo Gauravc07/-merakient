@@ -87,6 +87,9 @@ const LayoutElement = ({
     baseClasses += `${width} ${height} `
   }
 
+
+  
+
   // Add hover/selected/winning effects
   if (isBidable) {
     if (isCurrentUserWinning) {
@@ -419,18 +422,18 @@ export default function DynamicTableLayout({
   currentUser={currentUser}
 /> */}
 
-{/* <LayoutElement
-  id="vip10"
-  position={{ top: "20%", left: "85%", width: "30px", height: "50px" }}
-  category="VIP"
-  pax="6-8"
+<LayoutElement
+  id="SunnyB3"
+  position={{ top: "26%", left: "7%", width: "30px", height: "90px" }}
+  category=""
+  pax=""
   tables={tables}
   hoveredTable={hoveredTable}
   selectedTable={selectedTable}
-  onTableHover={onTableHover}
-  onTableSelect={onTableSelect}
+  onTableHover={() => {}}
+  onTableSelect={() => {}}
   currentUser={currentUser}
-/> */}
+/>
 
 <LayoutElement
   id="A3"
@@ -497,18 +500,19 @@ export default function DynamicTableLayout({
   currentUser={currentUser}
 />
 
-{/* <LayoutElement
-  id="vip16"
-  position={{ top: "28%", left: "82%" }}
-  category="VIP"
-  pax="6-8"
+<LayoutElement
+  id="SunnyB5"
+   position={{ top: "8%", left: "7%", width: "70px", height: "40px" }}
+  category=""
+  pax=""
   tables={tables}
   hoveredTable={hoveredTable}
   selectedTable={selectedTable}
-  onTableHover={onTableHover}
-  onTableSelect={onTableSelect}
+  onTableHover={() => {}}
+onTableSelect={() => {}}
   currentUser={currentUser}
-/> */}
+  
+/>
 
 
       {/* New static labels at the bottom */}
