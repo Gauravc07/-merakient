@@ -55,9 +55,11 @@ export default function SimpleLoginForm() {
           </button>
         </form>
 
-        {/* <div className="mt-4 text-sm text-gray-400 text-center">
-          <p>Demo credentials: user1 / password1</p>
-        </div> */}
+        <div className="mt-4 text-sm text-gray-400 text-center">
+          <p>THE BIDDING AMOUNT WILL INCREMENT AT THE BUFFER OF 10K. <br />
+            THE BIDDING AMOUNT WILL BE COLLECTED AT THE GATE SO BID ACCORDINGLY. <br />
+            THE HIGHEST BIDDER WILL GET A DEDICATED ESCORT TO HIS/HER TABLE.</p>
+        </div>
 
         <div className="mt-6 border-t border-gray-700 pt-6">
           <h2 className="text-xl font-bold text-yellow-400 text-center mb-4">Or</h2>
