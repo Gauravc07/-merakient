@@ -123,6 +123,11 @@ export default function ProductionBiddingTable({
   <span className="text-yellow-400 text-xl md:text-2xl font-semibold">x</span>
   <img src="/images/Ti_white.png" alt="Ti Logo" className="h-16 md:h-20 w-auto" />
 </div>
+<div>
+   <span className="font-serif text-2xl md:text-3xl font-bold text-gold-gradient mt-1">
+                  MK
+                </span>
+</div>
 
 
            
