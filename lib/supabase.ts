@@ -13,8 +13,22 @@ const supabaseRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 const anonKeyValid = !looksBogus(supabaseAnonKey)
 const adminKeyValid = !looksBogus(supabaseRoleKey)
 
+/**
+ * Sample tables / simulated bids are only for local development. On a deployed site a
+ * missing or broken database connection must show an error — never fake "live" tables or
+ * a fake "bid placed" confirmation.
+ */
+export const allowMockFallback = process.env.NODE_ENV !== "production"
+
+export const DB_UNAVAILABLE_MESSAGE =
+  "Bidding is temporarily unavailable — the site can't reach its database. Please try again shortly."
+
 if (!supabaseUrl || !anonKeyValid) {
-  console.warn("⚠️  Supabase public credentials missing or invalid – falling back to mock data.")
+  console.warn(
+    allowMockFallback
+      ? "⚠️  Supabase credentials missing or invalid – using local sample data."
+      : "❌ Supabase credentials missing or invalid – set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in the hosting environment.",
+  )
 }
 
 /*  Public client – used in the browser  */

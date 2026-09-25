@@ -52,7 +52,11 @@ export function useRealtimeBidding() {
         headers: { "Cache-Control": "no-cache" },
         signal: controller.signal,
       })
-      if (!response.ok) throw new Error(`HTTP ${response.status}`)
+      if (!response.ok) {
+        // Prefer the server's explanation (e.g. "Bidding is temporarily unavailable…") over a bare status code
+        const body = await response.json().catch(() => null)
+        throw new Error(body?.error || `HTTP ${response.status}`)
+      }
       return await response.json()
     } catch (err) {
       if (attempt < RETRY_DELAYS_MS.length) {
@@ -108,16 +112,18 @@ export function useRealtimeBidding() {
       setConnectionStatus("disconnected")
       return
     }
+    // Non-null copy so the nested callbacks below keep the narrowed type
+    const client = supabase
 
     let reconnectAttempts = 0
     const maxReconnectAttempts = 5
     let reconnectTimeout: ReturnType<typeof setTimeout> | undefined
-    let tablesChannel: ReturnType<typeof supabase.channel> | undefined
-    let bidsChannel: ReturnType<typeof supabase.channel> | undefined
+    let tablesChannel: ReturnType<typeof client.channel> | undefined
+    let bidsChannel: ReturnType<typeof client.channel> | undefined
 
     const cleanup = () => {
-      if (tablesChannel) supabase.removeChannel(tablesChannel)
-      if (bidsChannel) supabase.removeChannel(bidsChannel)
+      if (tablesChannel) client.removeChannel(tablesChannel)
+      if (bidsChannel) client.removeChannel(bidsChannel)
       if (reconnectTimeout) clearTimeout(reconnectTimeout)
     }
 
@@ -133,7 +139,7 @@ export function useRealtimeBidding() {
     const setupSubscriptions = () => {
       setConnectionStatus("connecting")
 
-      tablesChannel = supabase
+      tablesChannel = client
         .channel("tables-changes")
         .on("postgres_changes", { event: "UPDATE", schema: "public", table: "tables" }, (payload) => {
           setTables((prev) => prev.map((t) => (t.id === payload.new.id ? { ...t, ...(payload.new as Table) } : t)))
@@ -154,7 +160,7 @@ export function useRealtimeBidding() {
           }
         })
 
-      bidsChannel = supabase
+      bidsChannel = client
         .channel("bids-changes")
         .on("postgres_changes", { event: "INSERT", schema: "public", table: "bids" }, (payload) => {
           setRecentBids((prev) => [payload.new as Bid, ...prev.slice(0, 49)])

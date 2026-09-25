@@ -1,16 +1,22 @@
 import { NextResponse } from "next/server"
-import { supabase, supabaseAdmin } from "@/lib/supabase"
+import { supabase, supabaseAdmin, allowMockFallback, DB_UNAVAILABLE_MESSAGE } from "@/lib/supabase"
 import { mockTables } from "@/lib/mock-tables"
+
+// Local dev: sample tables so the UI still renders. Deployed: a clear 503, never fake data.
+function unavailable(reason: string) {
+  if (allowMockFallback) return NextResponse.json({ tables: mockTables, fallback: true, error: reason })
+  return NextResponse.json({ tables: [], error: DB_UNAVAILABLE_MESSAGE }, { status: 503 })
+}
 
 export async function GET() {
   if (!supabase && !supabaseAdmin) {
-    console.warn("⚠️  Supabase keys missing; serving mock tables.")
-    return NextResponse.json({ tables: mockTables, fallback: true })
+    console.error("/api/tables: Supabase credentials are not configured")
+    return unavailable("Supabase credentials are not configured")
   }
 
   try {
     const client = supabaseAdmin || supabase
-    const { data: tables, error, status } = await client
+    const { data: tables, error, status } = await client!
       .from("tables")
       .select("*")
       .eq("is_active", true)
@@ -18,13 +24,7 @@ export async function GET() {
 
     if (error) {
       console.error("Supabase error (tables):", error.message, "Status:", status)
-
-      if (status === 400 || status === 401 || status === 403 || error.message?.toLowerCase().includes("invalid api key")) {
-        console.warn("API /api/tables: Falling back to mock data due to Supabase error.")
-        return NextResponse.json({ tables: mockTables, fallback: true })
-      }
-
-      return NextResponse.json({ tables: mockTables, fallback: true, error: error.message })
+      return unavailable(error.message)
     }
 
     return NextResponse.json({
@@ -34,6 +34,6 @@ export async function GET() {
     })
   } catch (err) {
     console.error("Unexpected error in /api/tables:", err)
-    return NextResponse.json({ tables: mockTables, fallback: true, error: "Unexpected error" })
+    return unavailable("Unexpected error")
   }
 }

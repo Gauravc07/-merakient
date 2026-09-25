@@ -14,6 +14,12 @@ export async function login(_prevState: { error?: string } | null, formData: For
     return { error: "Username and password are required" }
   }
 
+  // Without database settings every login would fail as "invalid" — say what's actually wrong.
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    console.error("login: NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_ANON_KEY are not set")
+    return { error: "Login is unavailable right now — the site isn't connected to its database. Please contact the organiser." }
+  }
+
   // Use the enhanced authentication system
   const user = await authenticateUser(username, password)
 

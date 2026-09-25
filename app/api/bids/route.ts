@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { supabase, supabaseAdmin } from "@/lib/supabase"
+import { supabase, supabaseAdmin, allowMockFallback, DB_UNAVAILABLE_MESSAGE } from "@/lib/supabase"
 import { getCurrentUser } from "@/lib/auth-enhanced"
 import { BID_INCREMENT } from "@/lib/bidding-constants"
 
@@ -82,7 +82,12 @@ export async function POST(request: NextRequest) {
 
     // If we don't have supabaseAdmin, use a simple fallback
     if (!supabaseAdmin) {
-      console.warn("⚠️  No admin client; simulating bid placement")
+      // Never pretend a bid succeeded on a deployed site — the bidder would think it counted.
+      if (!allowMockFallback) {
+        console.error("/api/bids: Supabase credentials are not configured; bid rejected")
+        return NextResponse.json({ error: DB_UNAVAILABLE_MESSAGE }, { status: 503 })
+      }
+      console.warn("⚠️  No admin client; simulating bid placement (local development only)")
 
       // Simulate successful bid placement
       const mockResult = {
