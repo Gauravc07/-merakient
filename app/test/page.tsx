@@ -4,6 +4,8 @@ import SiteFooter from "@/components/site-footer"
 import { getCurrentUser } from "@/lib/auth-enhanced"
 import { redirect } from "next/navigation"
 
+export const dynamic = "force-dynamic"
+
 export default async function TestPage() {
   const user = await getCurrentUser()
 

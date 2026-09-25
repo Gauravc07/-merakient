@@ -5,6 +5,8 @@ import SiteFooter from "@/components/site-footer"
 import { getCurrentUser, isSpectatorSession } from "@/lib/auth-enhanced" // Import isSpectatorSession
 import { logout } from "@/app/actions"
 
+export const dynamic = "force-dynamic"
+
 export default async function BiddingPage() {
   const user = await getCurrentUser()
   const isSpectator = await isSpectatorSession() // Check for spectator session
