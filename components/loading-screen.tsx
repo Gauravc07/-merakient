@@ -48,9 +48,11 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
           animate={fadeOut ? { opacity: 0, y: -100 } : { opacity: 1, y: 0 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.8 }}
-          className="fixed inset-0 z-50 bg-black flex items-center justify-center"
+          className="mirzapur-scope fixed inset-0 z-50 flex items-center justify-center overflow-hidden px-6"
         >
-          <div className="flex items-center space-x-8">
+          <div className="smoke-layer" />
+          <div className="pointer-events-none absolute inset-0 spotlight-cone" />
+          <div className="relative flex flex-col items-center gap-6 text-center sm:flex-row sm:gap-8 sm:text-left">
             {/* Meraki Logo */}
             <motion.div
               initial={{ opacity: 0, x: -50 }}
@@ -72,18 +74,18 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-white space-y-2"
+              className="space-y-2 text-mirzapur-bone"
             >
-              <div className="text-sm font-light tracking-wider uppercase">BLENDING CREATIVITY AND</div>
-              <div className="text-sm font-light tracking-wider uppercase">INNOVATION TO AWAKEN NEW REALMS</div>
+              <div className="font-numeric text-xs uppercase tracking-[0.3em] text-mirzapur-gold/80">Blending creativity and</div>
+              <div className="font-numeric text-xs uppercase tracking-[0.3em] text-mirzapur-gold/80">innovation to awaken new realms</div>
 
-              <div className="flex items-center space-x-4 pt-4">
-                <span className="text-sm font-light tracking-wider">LOADING...</span>
+              <div className="flex items-center justify-center space-x-4 pt-4 sm:justify-start">
+                <span className="font-numeric text-xs tracking-[0.3em]">LOADING</span>
                 <motion.span
                   key={Math.floor(progress)}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="text-sm font-mono tabular-nums"
+                  className="font-numeric text-sm tabular-nums text-mirzapur-gold"
                 >
                   {Math.floor(progress).toString().padStart(3, "0")}% 
                 </motion.span>
@@ -94,17 +96,17 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.6 }}
-                    className="text-white text-sm font-light tracking-wide pl-4"
+                    className="pl-4 font-display text-sm text-mirzapur-bone"
                   >
-                    It's the <span className="italic font-medium">Meraki</span> way.
+                    It's the <span className="text-mirzapur-gold">Meraki</span> way.
                   </motion.span>
                 )}
               </div>
 
               {/* Progress Bar */}
-              <div className="w-64 h-0.5 bg-gray-800 mt-2">
+              <div className="mx-auto mt-2 h-0.5 w-64 bg-mirzapur-gold/15 sm:mx-0">
                 <motion.div
-                  className="h-full bg-white"
+                  className="h-full bg-mirzapur-gold shadow-[0_0_10px_rgba(201,162,39,0.8)]"
                   initial={{ width: 0 }}
                   animate={{ width: `${progress}%` }}
                   transition={{ duration: 0.1 }}

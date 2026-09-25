@@ -19,9 +19,16 @@ const config = {
       },
     },
     extend: {
+      // One fontFamily block only — a second `fontFamily` key in this object silently
+      // replaces the first, which is how font-display/font-numeric/font-poster went missing.
       fontFamily: {
+        sans: ["var(--font-poppins)", "sans-serif", "var(--font-oswald)"],
+        serif: ["var(--font-playfair)", "serif"],
         playfair: ['"Playfair Display"', "serif"],
         script: ['"Dancing Script"', "cursive"],
+        display: ["var(--font-cinzel)", "serif"],
+        numeric: ["var(--font-space-grotesk)", "sans-serif"],
+        poster: ["var(--font-poster)", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -76,6 +83,16 @@ const config = {
         "royal-red": "#8B0000", // Royal Red color
         "button-red": "#DC143C", // Crimson Red for button
         silver: "#C0C0C0", // Silver color
+        mirzapur: {
+          maroon: "#4A0404",
+          blood: "#B10000",
+          crimson: "#7A0C0C",
+          gunmetal: "#2B2B2B",
+          gold: "#C9A227",
+          bronze: "#8C6A2F",
+          bone: "#EDE0C8",
+          red: "#FF4545", // brighter than the poster's #E3262E so it stays legible over photos
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -95,10 +112,6 @@ const config = {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-      },
-      fontFamily: {
-        sans: ["var(--font-poppins)", "sans-serif", "var(--font-oswald)"], // Added Oswald
-        serif: ["var(--font-playfair)", "serif"],
       },
       boxShadow: {
         orange: "0 4px 15px rgba(255, 111, 0, 0.3)",

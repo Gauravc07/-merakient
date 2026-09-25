@@ -7,7 +7,8 @@ import { Label } from "@/components/ui/label"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { Badge } from "@/components/ui/badge"
 import { Loader2 } from "lucide-react"
-import type { Table } from "@/lib/supabase" // Import Table type
+import type { Table } from "@/lib/supabase"
+import { BID_INCREMENT, ZONE_STYLES, TABLE_ZONES, type TableZone } from "@/lib/bidding-constants"
 
 interface BidDialogProps {
   table: Table | null
@@ -32,7 +33,7 @@ export default function BidDialog({
 
   useEffect(() => {
     if (isOpen && table && !initialBidSetRef.current) {
-      setCustomBid((table.current_bid + 10000).toString())
+      setCustomBid((table.current_bid + BID_INCREMENT).toString())
       setBidError("")
       initialBidSetRef.current = true
     } else if (!isOpen) {
@@ -46,7 +47,7 @@ export default function BidDialog({
     if (!table) return
 
     const bidAmount = Number.parseInt(customBid)
-    const minimumBid = table.current_bid + 10000
+    const minimumBid = table.current_bid + BID_INCREMENT
 
     if (!customBid || isNaN(bidAmount)) {
       setBidError("Please enter a valid bid amount")
@@ -54,67 +55,56 @@ export default function BidDialog({
     }
 
     if (bidAmount < minimumBid) {
-      setBidError(`Bid must be at least ₹${minimumBid.toLocaleString()} (₹10000 more than current bid)`)
+      setBidError(`Bid must be at least ₹${minimumBid.toLocaleString()} (₹${BID_INCREMENT.toLocaleString()} more than current bid)`)
       return
     }
 
     setBidError("")
-    // Close the dialog immediately after validation passes and before placing the bid
     onOpenChange(false)
 
     const result = await onPlaceBid(table.id, bidAmount)
 
-    // If there was an error, re-open the dialog to show the error message
     if (!result.success) {
+      // On a version conflict / insufficient bid, the server tells us the real current
+      // minimum — bump the field to it so the user can just hit "Place Bid" again.
+      if (typeof result.minimum_bid === "number") {
+        setCustomBid(result.minimum_bid.toString())
+      }
       setBidError(result.error || "Failed to place bid")
-      onOpenChange(true) // Re-open dialog on error
+      onOpenChange(true)
     }
   }
 
-  const getCategoryColor = (category: string) => {
-    switch (category) {
-      case "Diamond":
-        return "bg-purple-600"
-      case "Platinum":
-        return "bg-gray-400"
-      case "Gold":
-        return "bg-yellow-500"
-      case "Silver":
-        return "bg-gray-300"
-      case "VIP":
-        return "bg-purple-800"
-      case "Standing":
-        return "bg-blue-600"
-      default:
-        return "bg-gray-500"
-    }
-  }
+  const zone: TableZone = (table?.category as TableZone) || "RESERVED"
+  const style = ZONE_STYLES[zone]
 
   if (!table) return null
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px] bg-card-overlay border-black-charcoal text-foreground max-h-[90vh] overflow-y-auto">
+      {/* Leave a margin on each side on phones instead of running edge to edge */}
+      <DialogContent className="w-[calc(100%-2.5rem)] max-w-[400px] rounded-xl p-5 sm:rounded-xl sm:p-6 bg-black border-mirzapur-gold/40 text-mirzapur-bone max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-platinum-gradient">
-            {currentUser} Place Your Bid on Table {table.name}
+          <DialogTitle className="text-mirzapur-gradient font-display text-xl">
+            {currentUser} — BID ON {table.name}
           </DialogTitle>
-          <DialogDescription className="text-muted-foreground">
+          <DialogDescription className="text-mirzapur-bone/60">
             Current highest bid: ₹{table.current_bid.toLocaleString()}
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="space-y-2">
-            <Label htmlFor="bid-amount" className="text-sm text-foreground">
-              Enter Your Bid (Min: ₹{(table.current_bid + 10000).toLocaleString()})
+            <Label htmlFor="bid-amount" className="text-sm text-mirzapur-bone">
+              Enter Your Bid (Min: ₹{(table.current_bid + BID_INCREMENT).toLocaleString()})
             </Label>
             <Input
               id="bid-amount"
               type="text"
-              placeholder={`${table.current_bid + 10000}`}
+              inputMode="numeric"
+              placeholder={`${table.current_bid + BID_INCREMENT}`}
               value={customBid}
               onChange={(e) => setCustomBid(e.target.value)}
-              className="bg-background border-yellow-500/50 text-foreground"
+              className="bg-black border-mirzapur-gold/40 text-mirzapur-bone"
               disabled={isPlacingBid}
             />
             {bidError && <p className="text-red-400 text-xs mt-1">{bidError}</p>}
@@ -122,17 +112,17 @@ export default function BidDialog({
 
           <div className="flex justify-between items-center">
             <div>
-              <p className="text-sm text-muted-foreground">Current Bid:</p>
-              <p className="font-bold text-yellow-400">₹{table.current_bid.toLocaleString()}</p>
-              <p className="text-xs text-muted-foreground">by {table.highest_bidder_username || "No bidder"}</p>
+              <p className="text-sm text-mirzapur-bone/60">Current Bid:</p>
+              <p className="font-bold text-mirzapur-gold">₹{table.current_bid.toLocaleString()}</p>
+              <p className="text-xs text-mirzapur-bone/50">by {table.highest_bidder_username || "No bidder"}</p>
             </div>
-            <Badge className={`${getCategoryColor(table.category)} text-white`}>{table.category}</Badge>
+            <Badge className={`${style.badge} border-0`}>{TABLE_ZONES[zone]}</Badge>
           </div>
         </div>
         <div className="flex justify-end">
           <Button
             onClick={handleInternalPlaceBid}
-            className="bg-yellow-500 hover:bg-yellow-600 text-black whitespace-nowrap"
+            className="bg-mirzapur-gold hover:bg-mirzapur-bronze text-black whitespace-nowrap font-semibold"
             disabled={!customBid || isPlacingBid}
           >
             {isPlacingBid ? (

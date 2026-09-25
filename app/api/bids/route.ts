@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { supabase, supabaseAdmin } from "@/lib/supabase"
 import { getCurrentUser } from "@/lib/auth-enhanced"
+import { BID_INCREMENT } from "@/lib/bidding-constants"
 
 export async function GET() {
   /* 1. Instant fallback when client isn't initialised */
@@ -10,11 +11,36 @@ export async function GET() {
   }
 
   try {
+    // Only show the current round: bids on tables open for bidding, placed since each
+    // table's round_started_at (set when the table is created or reset by
+    // 04-reset-for-new-event.sql). Moving the bidding window doesn't change it, so bids
+    // behind the current prices never disappear from the history.
+    const { data: activeTables, error: tablesError } = await supabase
+      .from("tables")
+      .select("id, round_started_at")
+      .eq("is_active", true)
+
+    if (tablesError) {
+      console.error("Supabase error (bids/tables):", tablesError.message)
+      return NextResponse.json({ bids: [], fallback: true })
+    }
+    if (!activeTables || activeTables.length === 0) {
+      return NextResponse.json({ bids: [], timestamp: new Date().toISOString(), count: 0 })
+    }
+
+    const roundStartById = new Map(activeTables.map((t) => [t.id, Date.parse(t.round_started_at)]))
+    const earliestRound = new Date(Math.min(...roundStartById.values())).toISOString()
     const {
-      data: bids,
+      data: rows,
       error,
       status,
-    } = await supabase.from("bids").select("*").order("bid_time", { ascending: false }).limit(50)
+    } = await supabase
+      .from("bids")
+      .select("*")
+      .in("table_id", [...roundStartById.keys()])
+      .gte("bid_time", earliestRound)
+      .order("bid_time", { ascending: false })
+      .limit(200)
 
     /* 2. Auth / key errors ⇒ fallback */
     if (error || status === 400 || status === 401 || status === 403) {
@@ -22,10 +48,13 @@ export async function GET() {
       return NextResponse.json({ bids: [], fallback: true })
     }
 
+    // Tables can be reset at different times, so apply each table's own round start.
+    const bids = (rows || []).filter((b) => Date.parse(b.bid_time) >= (roundStartById.get(b.table_id) ?? Infinity)).slice(0, 50)
+
     return NextResponse.json({
-      bids: bids || [],
+      bids,
       timestamp: new Date().toISOString(),
-      count: bids?.length || 0,
+      count: bids.length,
     })
   } catch (error) {
     console.error("Unexpected error:", error)
@@ -60,7 +89,7 @@ export async function POST(request: NextRequest) {
         success: true,
         bid_id: Math.floor(Math.random() * 1000),
         new_bid: bid_amount,
-        previous_bid: bid_amount - 1000,
+        previous_bid: bid_amount - BID_INCREMENT,
         new_version: 1,
         message: "Bid placed successfully (mock)",
       }

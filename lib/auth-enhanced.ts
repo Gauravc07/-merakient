@@ -105,16 +105,23 @@ export async function deleteSessionCookie() {
 }
 
 export async function getCurrentUser(): Promise<AuthUser | null> {
-  const userId = await getSessionUserId()
-  if (!userId) return null
+  const username = await getSessionUserId()
+  if (!username) return null
 
   try {
-    // Optionally you can fetch full user info from Supabase if needed
-    const userNumber = userId.replace("user", "")
+    // The session cookie only stores the username, so look up the real numeric id
+    // per request instead of guessing it from the string (usernames aren't "userN").
+    const { data, error } = await supabase.from("users").select("id, username, email").eq("username", username).single()
+
+    if (error || !data) {
+      console.error("Error fetching current user from Supabase:", error)
+      return null
+    }
+
     return {
-      id: Number.parseInt(userNumber) || 1,
-      username: userId,
-      email: `${userId}@demo.com`,
+      id: data.id,
+      username: data.username,
+      email: data.email,
     }
   } catch (error) {
     console.error("Error getting current user:", error)

@@ -1,17 +1,17 @@
 import { createClient } from "@supabase/supabase-js"
-import bcrypt from "bcrypt"
+import bcrypt from "bcryptjs"
 import { USERS } from "../lib/users.mjs" // Adjust path if necessary
 
 // Ensure these environment variables are set in your Vercel project or .env.local
-const supabaseUrl = process.env.SUPABASE_URL
-const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-if (!supabaseUrl || !supabaseServiceRoleKey) {
-  console.error("Error: SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY environment variables must be set.")
+if (!supabaseUrl || !supabaseKey) {
+  console.error("Error: NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY (or NEXT_PUBLIC_SUPABASE_ANON_KEY) must be set.")
   process.exit(1)
 }
 
-const supabase = createClient(supabaseUrl, supabaseServiceRoleKey, {
+const supabase = createClient(supabaseUrl, supabaseKey, {
   auth: {
     persistSession: false,
   },
@@ -40,7 +40,7 @@ async function seedUsersToSupabase() {
       const hashedPassword = await bcrypt.hash(user.password, saltRounds)
       usersToInsert.push({
         username: user.username,
-        hashed_password: hashedPassword, // Assuming your column is named 'hashed_password'
+        password_hash: hashedPassword, // matches the `password_hash` column in create-tables-v4.sql
       })
     }
 

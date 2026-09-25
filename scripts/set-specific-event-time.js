@@ -1,107 +1,59 @@
-// Script to set specific event times for bidding
-// Run with: node scripts/set-specific-event-time.js
+// Set the bidding window (IST) for all active tables.
+//
+// Usage (from the project root, works in PowerShell or bash):
+//   node scripts/set-specific-event-time.js 17:25 19:00                 -> today, 5:25 PM to 7:00 PM IST
+//   node scripts/set-specific-event-time.js 2026-09-26 21:00 00:00       -> that date, 9 PM to midnight IST
+//
+// If the end time is earlier than the start time, it's treated as the next day.
 
-const { createClient } = require("@supabase/supabase-js")
-const path = require("path")
-const fs = require("fs")
+import { createClient } from "@supabase/supabase-js"
+import fs from "node:fs"
+import path from "node:path"
+import { fileURLToPath } from "node:url"
 
-// Function to load environment variables from .env.local
-function loadEnvFile() {
-  const envPath = path.join(process.cwd(), ".env.local")
-
-  if (fs.existsSync(envPath)) {
-    const envFile = fs.readFileSync(envPath, "utf8")
-    const envLines = envFile.split("\n")
-
-    envLines.forEach((line) => {
-      const [key, ...valueParts] = line.split("=")
-      if (key && valueParts.length > 0) {
-        const value = valueParts.join("=").trim()
-        process.env[key.trim()] = value
-      }
-    })
-
-    console.log("✅ Loaded environment variables from .env.local")
-  } else {
-    console.log("⚠️  .env.local file not found, using system environment variables")
+const envPath = path.join(path.dirname(fileURLToPath(import.meta.url)), "..", ".env.local")
+if (fs.existsSync(envPath)) {
+  for (const line of fs.readFileSync(envPath, "utf8").split(/\r?\n/)) {
+    const match = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*)\s*$/)
+    if (match && !process.env[match[1]]) process.env[match[1]] = match[2]
   }
 }
 
-// Load environment variables
-loadEnvFile()
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
-
-console.log("🔍 Checking environment variables...")
-console.log(`Supabase URL: ${supabaseUrl ? "✅ Found" : "❌ Missing"}`)
-console.log(`Service Key: ${supabaseServiceKey ? "✅ Found" : "❌ Missing"}`)
-
-if (!supabaseUrl || !supabaseServiceKey) {
-  console.error("\n❌ Missing Supabase credentials!")
-  console.error("\n📋 Please ensure you have either:")
-  console.error("1. A .env.local file in your project root with:")
-  console.error("   NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co")
-  console.error("   SUPABASE_SERVICE_ROLE_KEY=your-service-role-key")
-  console.error("\n2. Or set these as system environment variables")
-  console.error("\n💡 You can find these values in your Supabase dashboard:")
-  console.error("   Settings → API → Project URL and Service Role Key")
+const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+if (!url || !key) {
+  console.error("Missing NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_ANON_KEY in .env.local")
   process.exit(1)
 }
 
-const supabase = createClient(supabaseUrl, supabaseServiceKey)
+const args = process.argv.slice(2)
+const todayIST = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Kolkata" }).format(new Date())
+const [date, start, end] = args.length === 3 ? args : [todayIST, ...args]
 
-async function setSpecificEventTimes() {
-  try {
-    // Define the specific start and end times for July 23rd, 2025, in IST
-    // Note: Dates are parsed as UTC by default if no timezone is specified.
-    // We construct them carefully to represent IST.
-
-    // July 23rd, 2025, 7:00:00 PM IST
-    const startDate = new Date(Date.UTC(2025, 6, 23, 13, 30, 0)) // UTC 13:30 is IST 19:00 (7 PM)
-    const startTime = startDate.toISOString().replace("Z", "+05:30")
-
-    // July 23rd, 2025, 8:00:00 PM IST
-    const endDate = new Date(Date.UTC(2025, 6, 23, 14, 30, 0)) // UTC 14:30 is IST 20:00 (8 PM)
-    const endTime = endDate.toISOString().replace("Z", "+05:30")
-
-    console.log("\n🕐 Setting specific event times...")
-    console.log(`📅 Start Time: ${startTime}`)
-    console.log(`📅 End Time: ${endTime}`)
-
-    const { data, error } = await supabase
-      .from("tables")
-      .update({
-        bidding_starts_at: startTime,
-        bidding_ends_at: endTime,
-      })
-      .eq("is_active", true)
-      .select()
-
-    if (error) {
-      throw error
-    }
-
-    console.log("\n✅ Event times updated successfully!")
-    console.log(`📊 Updated ${data.length} tables`)
-
-    // Display updated times for verification
-    console.log("\n📋 Updated tables:")
-    data.forEach((table) => {
-      console.log(
-        `   ${table.name}: ${new Date(table.bidding_starts_at).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })} → ${new Date(table.bidding_ends_at).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}`,
-      )
-    })
-  } catch (error) {
-    console.error("\n❌ Error setting event times:", error.message)
-
-    if (error.message.includes("JWT")) {
-      console.error("🔑 This looks like an authentication error. Please check your SUPABASE_SERVICE_ROLE_KEY")
-    }
-
-    process.exit(1)
-  }
+const TIME = /^([01]?\d|2[0-3]):[0-5]\d$/
+if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !TIME.test(start ?? "") || !TIME.test(end ?? "")) {
+  console.error("Usage: node scripts/set-specific-event-time.js [YYYY-MM-DD] HH:MM HH:MM   (24-hour, IST)")
+  process.exit(1)
 }
 
-// Run the update
-setSpecificEventTimes()
+const pad = (t) => t.padStart(5, "0")
+const startsAt = new Date(`${date}T${pad(start)}:00+05:30`)
+let endsAt = new Date(`${date}T${pad(end)}:00+05:30`)
+if (endsAt <= startsAt) endsAt = new Date(endsAt.getTime() + 24 * 3600_000)
+
+const fmt = (d) => d.toLocaleString("en-IN", { timeZone: "Asia/Kolkata", dateStyle: "medium", timeStyle: "short" })
+const minutes = Math.round((endsAt - startsAt) / 60_000)
+console.log(`Setting bidding window: ${fmt(startsAt)} -> ${fmt(endsAt)} IST (${Math.floor(minutes / 60)}h ${minutes % 60}m)`)
+
+const supabase = createClient(url, key, { auth: { persistSession: false } })
+const { data, error } = await supabase
+  .from("tables")
+  .update({ bidding_starts_at: startsAt.toISOString(), bidding_ends_at: endsAt.toISOString() })
+  .eq("is_active", true)
+  .select("id")
+
+if (error) {
+  console.error("Failed to update bidding window:", error.message)
+  process.exit(1)
+}
+console.log(`Updated ${data.length} active tables: ${data.map((t) => t.id).join(", ")}`)

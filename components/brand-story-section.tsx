@@ -2,33 +2,25 @@ import Image from "next/image"
 
 export default function BrandStorySection() {
   return (
-    <section className="relative bg-black text-white py-16 md:py-24">
-      {/* Background overlay for better text readability */}
-      <div className="absolute inset-0 bg-black/80 z-10"></div>
-
-      {/* Background image */}
+    <section className="relative overflow-hidden bg-black py-20 text-white md:py-28">
       <div className="absolute inset-0">
-        <Image
-          src="/images/gg90.jpg"
-          alt="Meraki Entertainment Brand Story Background"
-          fill
-          className="object-cover"
-          priority
-        />
+        <Image src="/images/gg90.jpg" alt="" fill className="object-cover" />
       </div>
+      {/* crimson velvet grade over the photo so the gold text stays readable */}
+      <div className="absolute inset-0 z-10 bg-gradient-to-b from-black/90 via-mirzapur-maroon/75 to-black/95" />
+      <div className="pointer-events-none absolute inset-0 z-10 spotlight-cone" />
 
-      {/* Content */}
-      <div className="relative z-20 container mx-auto px-4">
-        <div className="max-w-4xl mx-auto text-center space-y-8">
-          {/* Main heading */}
-          <div className="space-y-4">
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold tracking-wider">
-              MERAKI ENTERTAINMENT <br /><br />
-            </h2>
-            <h3 className="text-xl md:text-2xl lg:text-3xl font-semibold text-yellow-200">
-              UNFORGETTABLE EXPERIENCES, THE MERAKI WAY
-            </h3>
-          </div>
+      <div className="container relative z-20 mx-auto px-4">
+        <div className="mx-auto max-w-4xl space-y-6 text-center">
+          <h2 className="font-display text-3xl tracking-wide text-mirzapur-gradient md:text-4xl lg:text-5xl">
+            Meraki Entertainment
+          </h2>
+          <p className="font-numeric text-sm tracking-[0.35em] text-mirzapur-gold/80 md:text-base">
+            UNFORGETTABLE EXPERIENCES, THE MERAKI WAY
+          </p>
+          <p className="font-display text-xl italic text-mirzapur-bone/85 md:text-2xl">
+            “Party sabke liye hai… takht sirf ek ka.”
+          </p>
         </div>
       </div>
     </section>

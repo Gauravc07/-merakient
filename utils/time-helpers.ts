@@ -12,30 +12,20 @@ export function formatISTTime(dateString: string): string {
   })
 }
 
-export function getISTTime(): Date {
-  return new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }))
-}
-
+// DB timestamps are absolute instants (timestamptz), so compare against Date.now() directly.
+// Converting "now" into an IST wall-clock Date first would shift it by the viewer's own
+// UTC offset and break the countdown for anyone whose device isn't set to IST.
 export function isEventLive(startsAt: string, endsAt: string): boolean {
-  const now = getISTTime()
-  const start = new Date(startsAt)
-  const end = new Date(endsAt)
-
-  return now >= start && now <= end
+  const now = Date.now()
+  return now >= new Date(startsAt).getTime() && now <= new Date(endsAt).getTime()
 }
 
 export function getTimeUntilStart(startsAt: string): number {
-  const now = getISTTime()
-  const start = new Date(startsAt)
-
-  return Math.max(0, start.getTime() - now.getTime())
+  return Math.max(0, new Date(startsAt).getTime() - Date.now())
 }
 
 export function getTimeUntilEnd(endsAt: string): number {
-  const now = getISTTime()
-  const end = new Date(endsAt)
-
-  return Math.max(0, end.getTime() - now.getTime())
+  return Math.max(0, new Date(endsAt).getTime() - Date.now())
 }
 
 export function formatTimeRemaining(milliseconds: number): string {

@@ -10,60 +10,51 @@ interface BidLoadingOverlayProps {
 export default function BidLoadingOverlay({ isVisible }: BidLoadingOverlayProps) {
   const [dots, setDots] = useState("")
 
-  // Animate the dots
   useEffect(() => {
     if (!isVisible) return
-
-    const interval = setInterval(() => {
-      setDots((prev) => {
-        if (prev === "...") return ""
-        return prev + "."
-      })
-    }, 500)
-
+    const interval = setInterval(() => setDots((prev) => (prev === "..." ? "" : prev + ".")), 400)
     return () => clearInterval(interval)
   }, [isVisible])
 
   if (!isVisible) return null
 
   return (
-    <div className="fixed inset-0 bg-black/95 backdrop-blur-sm z-50 flex items-center justify-center">
-      <div className="text-center space-y-8">
-        {/* Animated King Character */}
-        <div className="relative">
-          <div className="animate-bounce">
-            <Image
-              src="/images/king-character.png"
-              alt="King of Good Times"
-              width={200}
-              height={200}
-              className="mx-auto drop-shadow-5xl"
-            />
-          </div>
+    <div
+      className="mirzapur-scope fixed inset-0 z-50 flex items-center justify-center overflow-hidden px-6"
+      role="status"
+      aria-live="polite"
+    >
+      <div className="smoke-layer" />
+      <div className="pointer-events-none absolute inset-0 spotlight-cone" />
 
-          {/* Golden glow effect around the character */}
-          <div className="absolute inset-0 bg-gradient-radial from-yellow-400/20 via-transparent to-transparent rounded-full animate-pulse"></div>
+      <div className="relative space-y-6 text-center">
+        <div className="relative mx-auto flex h-64 w-64 items-center justify-center sm:h-72 sm:w-72">
+          {/* slow-spinning gold ring + glow behind the figure */}
+          <div className="absolute inset-0 animate-[spin_6s_linear_infinite] rounded-full border border-dashed border-mirzapur-gold/40" />
+          <div className="absolute inset-6 rounded-full bg-mirzapur-gold/15 blur-2xl" />
+          {/* transparent cut-out (white background removed) — public/images/bid-overlay-figure.png */}
+          <Image
+            src="/images/bid-overlay-figure.png"
+            alt=""
+            width={536}
+            height={672}
+            priority
+            className="relative h-60 w-auto animate-[bid-float_2.4s_ease-in-out_infinite] drop-shadow-[0_0_25px_rgba(201,162,39,0.45)] sm:h-72"
+          />
         </div>
 
-        {/* Loading text with animated dots */}
-        <div className="space-y-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-gold-gradient">Placing Your Bid{dots}</h2>
-          <p className="text-xl text-yellow-300 animate-pulse">Your table’s taken care of. Respect.</p>
+        <div className="space-y-2">
+          <h2 className="font-display text-3xl text-mirzapur-gradient sm:text-4xl">
+            <span className="relative">
+              Bid lag rahi hai
+              <span className="absolute left-full text-mirzapur-gold">{dots}</span>
+            </span>
+          </h2>
+          <p className="text-sm text-mirzapur-bone/70 sm:text-base">Gaddi ki taraf ek kadam aur.</p>
         </div>
 
-        {/* Animated loading bar */}
-        <div className="w-64 mx-auto">
-          <div className="h-2 bg-gray-800 rounded-full overflow-hidden">
-            <div className="h-full bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full animate-pulse"></div>
-          </div>
-        </div>
-
-        {/* Floating golden particles */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-yellow-400 rounded-full animate-ping"></div>
-          <div className="absolute top-1/3 right-1/4 w-1 h-1 bg-orange-400 rounded-full animate-ping animation-delay-300"></div>
-          <div className="absolute bottom-1/3 left-1/3 w-1.5 h-1.5 bg-yellow-300 rounded-full animate-ping animation-delay-700"></div>
-          <div className="absolute bottom-1/4 right-1/3 w-1 h-1 bg-orange-300 rounded-full animate-ping animation-delay-1000"></div>
+        <div className="mx-auto h-1 w-56 overflow-hidden rounded-full bg-mirzapur-gold/15">
+          <div className="h-full w-1/3 animate-[bid-sweep_1.1s_ease-in-out_infinite] rounded-full bg-gradient-to-r from-transparent via-mirzapur-gold to-transparent" />
         </div>
       </div>
     </div>

@@ -20,20 +20,40 @@ if (!supabaseUrl || !anonKeyValid) {
 /*  Public client – used in the browser  */
 export const supabase = supabaseUrl && anonKeyValid ? createClient(supabaseUrl, supabaseAnonKey!) : null
 
-/*  Admin client – server-only operations (service role key REQUIRED) */
+/*
+ * Admin client – server-only operations. Prefers the service role key; falls back to the
+ * anon/publishable key when no service role key is configured. This is safe here because
+ * the RLS policies in scripts/create-tables-v4.sql already allow all reads/writes
+ * (enforcement happens in the place_bid() RPC and the app layer, not RLS).
+ */
 export const supabaseAdmin =
   supabaseUrl && adminKeyValid
     ? createClient(supabaseUrl, supabaseRoleKey!, {
         auth: { autoRefreshToken: false, persistSession: false },
       })
-    : null
+    : supabaseUrl && anonKeyValid
+      ? createClient(supabaseUrl, supabaseAnonKey!, {
+          auth: { autoRefreshToken: false, persistSession: false },
+        })
+      : null
 
 // Database types
+export type TableCategory =
+  | "DJ_BOOTH"
+  | "LEVEL_01"
+  | "DANCE_FLOOR"
+  | "FLOOR_SIDE"
+  | "FRONT_ROW"
+  | "BALCONY"
+  | "KEY_CLUB"
+  | "RESERVED"
+
 export interface Table {
   id: string
   name: string
-  category: "Diamond" | "Platinum" | "Gold" | "Silver"
+  category: TableCategory
   pax: string
+  sort_order: number
   base_price: number
   current_bid: number
   highest_bidder_id?: number
