@@ -5,8 +5,10 @@ const looksBogus = (val?: string | null) =>
   val.includes("Ej8Ej8") || // placeholder anon key
   val.includes("SERVICE_ROLE_KEY_HERE") // placeholder service key
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from "./supabase-config"
+
+const supabaseUrl = SUPABASE_URL
+const supabaseAnonKey = SUPABASE_ANON_KEY
 const supabaseRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
 // Treat bogus keys as absent

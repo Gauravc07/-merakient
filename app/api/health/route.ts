@@ -1,13 +1,14 @@
 import { NextResponse } from "next/server"
 import { supabase } from "@/lib/supabase"
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from "@/lib/supabase-config"
 
 export const dynamic = "force-dynamic"
 
 // Deployment diagnostics. Shows whether each setting is present (yes/no) and which Supabase
 // project the URL points at — never the key itself.
 export async function GET() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  const url = SUPABASE_URL
+  const anonKey = SUPABASE_ANON_KEY
   let supabaseHost: string | null = null
   try {
     supabaseHost = url ? new URL(url).host : null
@@ -16,8 +17,8 @@ export async function GET() {
   }
 
   const settings = {
-    NEXT_PUBLIC_SUPABASE_URL: url ? "set" : "MISSING",
-    NEXT_PUBLIC_SUPABASE_ANON_KEY: anonKey ? `set (${anonKey.length} characters)` : "MISSING",
+    supabaseUrl: url ? "set" : "MISSING",
+    publishableKey: anonKey ? `set (${anonKey.length} characters)` : "MISSING",
     supabaseProject: supabaseHost,
     environment: process.env.VERCEL_ENV || process.env.NODE_ENV || "unknown",
   }

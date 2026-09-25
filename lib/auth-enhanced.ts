@@ -3,6 +3,7 @@
 import { cookies } from "next/headers"
 import { createClient } from "@supabase/supabase-js"
 import bcrypt from "bcryptjs"
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from "./supabase-config"
 
 type AuthDatabase = {
   public: {
@@ -35,8 +36,8 @@ type AuthDatabase = {
 let supabase: ReturnType<typeof createClient<AuthDatabase>> | null = null
 
 function getSupabaseClient() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  const supabaseUrl = SUPABASE_URL
+  const supabaseAnonKey = SUPABASE_ANON_KEY
 
   if (!supabaseUrl || !supabaseAnonKey) {
     return null
