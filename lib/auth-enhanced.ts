@@ -4,10 +4,50 @@ import { cookies } from "next/headers"
 import { createClient } from "@supabase/supabase-js"
 import bcrypt from "bcryptjs"
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-)
+type AuthDatabase = {
+  public: {
+    Tables: {
+      users: {
+        Row: {
+          id: number
+          username: string
+          email: string | null
+          password_hash: string
+        }
+        Insert: {
+          id?: number
+          username: string
+          email?: string | null
+          password_hash: string
+        }
+        Update: {
+          id?: number
+          username?: string
+          email?: string | null
+          password_hash?: string
+        }
+        Relationships: []
+      }
+    }
+  }
+}
+
+let supabase: ReturnType<typeof createClient<AuthDatabase>> | null = null
+
+function getSupabaseClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+  if (!supabaseUrl || !supabaseAnonKey) {
+    return null
+  }
+
+  if (!supabase) {
+    supabase = createClient<AuthDatabase>(supabaseUrl, supabaseAnonKey)
+  }
+
+  return supabase
+}
 
 const SESSION_COOKIE_NAME = "meraki_session"
 const SPECTATOR_COOKIE_NAME = "meraki_spectator_session"
@@ -21,8 +61,14 @@ export interface AuthUser {
 
 export async function authenticateUser(username: string, password: string): Promise<AuthUser | null> {
   try {
+    const client = getSupabaseClient()
+    if (!client) {
+      console.error("Authentication unavailable: Supabase credentials are not configured")
+      return null
+    }
+
     // Fetch user with matching username from Supabase
-    const { data, error } = await supabase
+    const { data, error } = await client
       .from("users")
       .select("id, username, email, password_hash")
       .eq("username", username)
@@ -40,7 +86,7 @@ export async function authenticateUser(username: string, password: string): Prom
     return {
       id: data.id,
       username: data.username,
-      email: data.email,
+      email: data.email ?? undefined,
     }
   } catch (error) {
     console.error("Authentication error:", error)
@@ -50,7 +96,8 @@ export async function authenticateUser(username: string, password: string): Prom
 
 export async function setSessionCookie(userId: string) {
   try {
-    cookies().set(SESSION_COOKIE_NAME, userId, {
+    const cookieStore = await cookies()
+    cookieStore.set(SESSION_COOKIE_NAME, userId, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       maxAge: SESSION_EXPIRATION_SECONDS,
@@ -64,7 +111,8 @@ export async function setSessionCookie(userId: string) {
 
 export async function setSpectatorSessionCookie() {
   try {
-    cookies().set(SPECTATOR_COOKIE_NAME, "true", {
+    const cookieStore = await cookies()
+    cookieStore.set(SPECTATOR_COOKIE_NAME, "true", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       maxAge: SESSION_EXPIRATION_SECONDS,
@@ -109,9 +157,15 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
   if (!username) return null
 
   try {
+    const client = getSupabaseClient()
+    if (!client) {
+      console.error("User lookup unavailable: Supabase credentials are not configured")
+      return null
+    }
+
     // The session cookie only stores the username, so look up the real numeric id
     // per request instead of guessing it from the string (usernames aren't "userN").
-    const { data, error } = await supabase.from("users").select("id, username, email").eq("username", username).single()
+    const { data, error } = await client.from("users").select("id, username, email").eq("username", username).single()
 
     if (error || !data) {
       console.error("Error fetching current user from Supabase:", error)
@@ -121,7 +175,7 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
     return {
       id: data.id,
       username: data.username,
-      email: data.email,
+      email: data.email ?? undefined,
     }
   } catch (error) {
     console.error("Error getting current user:", error)

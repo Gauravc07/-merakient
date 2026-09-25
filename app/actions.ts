@@ -22,7 +22,7 @@ export async function login(_prevState: { error?: string } | null, formData: For
   }
 
   // Success ‒ create a session cookie and redirect to /bidding
-  setSessionCookie(user.username)
+  await setSessionCookie(user.username)
   redirect("/bidding") // do NOT wrap in try/catch
 }
 
@@ -30,7 +30,7 @@ export async function login(_prevState: { error?: string } | null, formData: For
  * Logout Server Action
  */
 export async function logout() {
-  deleteSessionCookie() // This will now delete both bidder and spectator cookies
+  await deleteSessionCookie() // This will now delete both bidder and spectator cookies
   redirect("/") // do NOT wrap in try/catch
 }
 
@@ -38,6 +38,6 @@ export async function logout() {
  * Spectator Login Server Action
  */
 export async function spectatorLogin() {
-  setSpectatorSessionCookie()
+  await setSpectatorSessionCookie()
   redirect("/bidding")
 }

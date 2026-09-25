@@ -3,7 +3,7 @@ import { deleteSessionCookie } from "@/lib/auth-enhanced"
 
 export async function POST() {
   try {
-    deleteSessionCookie()
+    await deleteSessionCookie()
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error("Logout error:", error)
