@@ -8,8 +8,9 @@
 -- Same thing from a terminal: node scripts/set-specific-event-time.js 17:25 19:00
 
 UPDATE tables
-SET bidding_starts_at = '2026-09-26 17:22:00+05:30',
-    bidding_ends_at   = '2026-09-26 18:22:00+05:30'
+SET bidding_starts_at = '2026-09-26 19:00:00+05:30',
+    bidding_ends_at   = '2026-09-26 19:30:00+05:30'
+
 WHERE is_active = true;
 
 -- Check: every open table should show the new window.
