@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import { CalendarDays, Clock, MapPin, Crown } from "lucide-react"
+import { CalendarDays, Clock, MapPin, Crown, Music } from "lucide-react"
 import type { Table } from "@/lib/supabase"
 import { useBiddingClock } from "@/hooks/use-bidding-clock"
 import GaddiThrone from "./gaddi-throne"
@@ -67,12 +67,15 @@ export default function UpcomingEvents() {
               </li>
               <li className="flex items-center justify-center gap-2 md:justify-start">
                 <CalendarDays className="h-4 w-4 text-mirzapur-gold" />
-                {clock.startsAt ? istDate(clock.startsAt) : "Date to be announced"}
+                {istDate(`${EVENT.eventDate}T12:00:00+05:30`)}
+              </li>
+              <li className="flex items-center justify-center gap-2 md:justify-start">
+                <Music className="h-4 w-4 text-mirzapur-gold" /> {EVENT.dj}
               </li>
               {clock.startsAt && clock.endsAt && (
                 <li className="flex items-center justify-center gap-2 md:justify-start">
                   <Clock className="h-4 w-4 text-mirzapur-gold" />
-                  Table bidding {istTime(clock.startsAt)} – {istTime(clock.endsAt)} IST
+                  Table bidding {istDate(clock.startsAt)}, {istTime(clock.startsAt)} – {istTime(clock.endsAt)} IST
                 </li>
               )}
               {minPrice !== null && (

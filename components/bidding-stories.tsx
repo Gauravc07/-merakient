@@ -3,11 +3,18 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react"
 import { Gavel, MousePointerClick, Music, Sparkles, X } from "lucide-react"
 import { BID_INCREMENT, TABLE_PRICES } from "@/lib/bidding-constants"
+import { CURRENT_EVENT } from "@/lib/event-content"
 
 const SLIDE_MS = 7000
 const TAP_MAX_MS = 250
 
 const inr = (n: number) => `₹${n.toLocaleString("en-IN")}`
+const eventDateLong = new Date(`${CURRENT_EVENT.eventDate}T12:00:00+05:30`).toLocaleDateString("en-IN", {
+  timeZone: "Asia/Kolkata",
+  weekday: "long",
+  day: "numeric",
+  month: "long",
+})
 
 interface Slide {
   eyebrow: string
@@ -17,7 +24,7 @@ interface Slide {
   body: ReactNode
 }
 
-// Edit slide copy here. The DJ slide has placeholder text — replace it with the real lineup.
+// Edit slide copy here. The DJ name and event date come from lib/event-content.ts.
 const SLIDES: Slide[] = [
   {
     eyebrow: "How to bid · 1/2",
@@ -50,15 +57,16 @@ const SLIDES: Slide[] = [
     ),
   },
   {
-    eyebrow: "Tonight on the decks",
+    eyebrow: "On the decks",
     title: "DJ LINEUP",
     icon: <Music className="h-10 w-10" />,
     background: "radial-gradient(ellipse at 50% 20%, #2a0a3d 0%, #10031a 60%, #07010a 100%)",
     body: (
       <div className="space-y-3">
-        <p className="font-display text-2xl tracking-wider text-mirzapur-gold">[DJ NAME]</p>
-        <p>[Add the DJ's genre / signature sound here — e.g. Bollywood, house, commercial.]</p>
-        <p>[Add set timing, e.g. "Live from 9 PM till close".]</p>
+        <p className="font-display text-3xl tracking-wider text-mirzapur-gold">{CURRENT_EVENT.dj}</p>
+        <p>
+          Live at <b>{CURRENT_EVENT.title}</b>, {eventDateLong}, {CURRENT_EVENT.venue}.
+        </p>
         <p className="text-mirzapur-bone/60">The XC tables sit right beside the DJ console — the best seats for the set.</p>
       </div>
     ),
