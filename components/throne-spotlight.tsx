@@ -3,8 +3,8 @@
 import { useMemo } from "react"
 import { Crown } from "lucide-react"
 import type { Table } from "@/lib/supabase"
-import { BID_INCREMENT, TABLE_ZONES, type TableZone } from "@/lib/bidding-constants"
-import { formatClock, type BiddingClock } from "@/hooks/use-bidding-clock"
+import { TABLE_ZONES, type TableZone } from "@/lib/bidding-constants"
+import type { BiddingClock } from "@/hooks/use-bidding-clock"
 
 const inr = (n: number) => `₹${n.toLocaleString("en-IN")}`
 
@@ -26,9 +26,6 @@ export default function ThroneSpotlight({ tables, clock, onBid, canBid }: Throne
 
   const lowestOpening = useMemo(() => (tables.length ? Math.min(...tables.map((t) => t.base_price)) : null), [tables])
 
-  const timeLabel =
-    clock.phase === "live" ? formatClock(clock.countdown) : clock.phase === "not-started" ? `in ${formatClock(clock.countdown)}` : "Closed"
-
   return (
     <section className="mirzapur-texture relative mb-5 overflow-hidden rounded-2xl border border-mirzapur-gold/40 bg-black/60 px-4 py-3.5 text-center shadow-[0_0_60px_rgba(201,162,39,0.08)] sm:px-6 sm:py-5">
       <div className="pointer-events-none absolute inset-x-0 -top-24 mx-auto h-48 w-2/3 rounded-full bg-mirzapur-gold/10 blur-3xl" />
@@ -44,9 +41,7 @@ export default function ThroneSpotlight({ tables, clock, onBid, canBid }: Throne
           </p>
           <p className="gold-glow font-numeric text-4xl font-bold text-mirzapur-gold sm:text-5xl">{inr(throne.current_bid)}</p>
 
-          <dl className="mx-auto grid max-w-xl grid-cols-3 gap-2 sm:gap-4">
-            <Stat label="Next bid" value={inr(throne.current_bid + BID_INCREMENT)} />
-            <Stat label="Time left" value={timeLabel} />
+          <dl className="mx-auto max-w-xs">
             <Stat label="Highest bidder" value={`👑 ${throne.highest_bidder_username}`} />
           </dl>
 
