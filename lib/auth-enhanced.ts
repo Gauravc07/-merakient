@@ -14,18 +14,21 @@ type AuthDatabase = {
           username: string
           email: string | null
           password_hash: string
+          is_active: boolean | null
         }
         Insert: {
           id?: number
           username: string
           email?: string | null
           password_hash: string
+          is_active?: boolean | null
         }
         Update: {
           id?: number
           username?: string
           email?: string | null
           password_hash?: string
+          is_active?: boolean | null
         }
         Relationships: []
       }
@@ -71,7 +74,7 @@ export async function authenticateUser(username: string, password: string): Prom
     // Fetch user with matching username from Supabase
     const { data, error } = await client
       .from("users")
-      .select("id, username, email, password_hash")
+      .select("id, username, email, password_hash, is_active")
       .eq("username", username)
       .single()
 
@@ -79,6 +82,9 @@ export async function authenticateUser(username: string, password: string): Prom
       console.error("Supabase fetch error:", error)
       return null
     }
+
+    // Users removed from the list but kept for their bid history are deactivated
+    if (data.is_active === false) return null
 
     // Compare provided password with bcrypt hash
     const isMatch = await bcrypt.compare(password, data.password_hash)
@@ -166,12 +172,19 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
 
     // The session cookie only stores the username, so look up the real numeric id
     // per request instead of guessing it from the string (usernames aren't "userN").
-    const { data, error } = await client.from("users").select("id, username, email").eq("username", username).single()
+    const { data, error } = await client
+      .from("users")
+      .select("id, username, email, is_active")
+      .eq("username", username)
+      .single()
 
     if (error || !data) {
       console.error("Error fetching current user from Supabase:", error)
       return null
     }
+
+    // Deleted or deactivated users lose access immediately, even with an existing session
+    if (data.is_active === false) return null
 
     return {
       id: data.id,

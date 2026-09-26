@@ -1,5 +1,11 @@
+import path from "node:path"
+import { fileURLToPath } from "node:url"
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // This folder is the project root. Without this, Next.js can pick up a stray
+  // package-lock.json higher up (e.g. in the user's home folder) and use the wrong root.
+  outputFileTracingRoot: path.dirname(fileURLToPath(import.meta.url)),
   eslint: {
     ignoreDuringBuilds: true,
   },

@@ -18,6 +18,10 @@ interface XclusiveTableLayoutProps {
 // The canvas is scaled down to fit narrower screens; tile sizes stay constant in it.
 const MAP_W = 576
 const MAP_H = 700
+
+// Tables not open for bidding (E, T, D, F, B, KC) and the poster's decor squares are hidden
+// for now. Set to true to show them again as small "Reserved" tiles.
+const SHOW_NON_BIDDABLE_TABLES = false
 const BIDDABLE_SIZE = 56
 const RESERVED_SIZE = 28
 
@@ -102,8 +106,9 @@ function Tile({
   const [x, y] = TABLE_POS[id]
   const table = tables.find((t) => t.id === id)
 
-  // Not returned by the API = not open for bidding → small, dimmed "reserved" tile.
+  // Not returned by the API = not open for bidding → hidden, or a small dimmed "reserved" tile.
   if (!table) {
+    if (!SHOW_NON_BIDDABLE_TABLES) return null
     return (
       <div
         title={`${id} — reserved, not open for bidding`}
@@ -183,7 +188,7 @@ export default function XclusiveTableLayout({
             {/* bar divider */}
             <div className="absolute w-px bg-mirzapur-gold/35" style={{ left: 475, top: 266, height: 151 }} />
 
-            {DECOR_SQUARES.map(([x, y], i) => (
+            {SHOW_NON_BIDDABLE_TABLES && DECOR_SQUARES.map(([x, y], i) => (
               <div
                 key={i}
                 aria-hidden
@@ -227,9 +232,11 @@ export default function XclusiveTableLayout({
       </div>
 
       <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5 font-numeric text-[10px] text-mirzapur-bone/60 sm:text-xs">
-        <span className="flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-sm border border-violet-500/50 bg-violet-950/60" /> Reserved
-        </span>
+        {SHOW_NON_BIDDABLE_TABLES && (
+          <span className="flex items-center gap-1.5">
+            <span className="h-2.5 w-2.5 rounded-sm border border-violet-500/50 bg-violet-950/60" /> Reserved
+          </span>
+        )}
         <span className="flex items-center gap-1.5">
           <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" /> Yours
         </span>
