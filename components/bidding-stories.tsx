@@ -1,6 +1,7 @@
 "use client"
 
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react"
+import Image from "next/image"
 import { Gavel, MousePointerClick, Music, Sparkles, X } from "lucide-react"
 import { BID_INCREMENT, TABLE_PRICES } from "@/lib/bidding-constants"
 import { CURRENT_EVENT } from "@/lib/event-content"
@@ -22,6 +23,9 @@ interface Slide {
   icon: ReactNode
   background: string
   body: ReactNode
+  /** Full-screen 9:16 poster slide: the image fills the slide and `body` is the caption,
+   *  shown in the poster's empty bottom strip so it never covers the poster's own text. */
+  poster?: { src: string; alt: string }
 }
 
 // Edit slide copy here. The DJ name and event date come from lib/event-content.ts.
@@ -84,6 +88,22 @@ const SLIDES: Slide[] = [
         </p>
         <p>No reservation lists, no favourites — every bid is live, public and fair. The highest bid when the clock runs out wins.</p>
         <p className="font-display text-xl tracking-wider text-mirzapur-gold">Ab gaddi aapki. Bid karo.</p>
+      </div>
+    ),
+  },
+  {
+    eyebrow: "Featuring",
+    title: "Munna Bhaiya",
+    icon: null,
+    background: "#000",
+    poster: { src: "/images/xclusive-amar-hai-hum.jpg", alt: "Bole the na, amar hai hum! — Xclusive Superclub, Pune" },
+    body: (
+      <div className="text-center">
+        <p className="font-numeric text-[9px] font-semibold leading-none tracking-[0.45em] text-mirzapur-gold sm:text-[11px]">FEATURING</p>
+        <p className="mt-1 font-poster text-[24px] uppercase leading-none tracking-wide sm:text-3xl">
+          <span className="text-parchment">Munna Bhaiya </span>
+          <span className="text-mirzapur-red">from Mirzapur</span>
+        </p>
       </div>
     ),
   },
@@ -188,8 +208,16 @@ export default function BiddingStories({ open, onClose }: BiddingStoriesProps) {
         onPointerUp={handlePointerUp}
         onPointerLeave={() => setPaused(false)}
       >
+        {slide.poster && (
+          <>
+            <Image src={slide.poster.src} alt={slide.poster.alt} fill priority sizes="(min-width: 640px) 50vh, 100vw" className="object-cover" />
+            {/* darken the top (light rays) so the header and caption stay readable; stops above the head */}
+            <div className="pointer-events-none absolute inset-x-0 top-0 h-[18%] bg-[linear-gradient(to_bottom,rgba(0,0,0,0.92)_0%,rgba(0,0,0,0.85)_78%,transparent_100%)]" />
+          </>
+        )}
+
         {/* Progress bars */}
-        <div className="flex gap-1 px-3 pt-[max(0.75rem,env(safe-area-inset-top))]">
+        <div className="relative z-10 flex gap-1 px-3 pt-[max(0.75rem,env(safe-area-inset-top))]">
           {SLIDES.map((_, i) => (
             <div key={i} className="h-1 flex-1 overflow-hidden rounded-full bg-white/25">
               <div
@@ -201,7 +229,7 @@ export default function BiddingStories({ open, onClose }: BiddingStoriesProps) {
         </div>
 
         {/* Header */}
-        <div className="flex items-center justify-between px-3 pt-3">
+        <div className="relative z-10 flex items-center justify-between px-3 pt-3">
           <div className="flex items-center gap-2">
             <img src="/images/meraki-logo.png" alt="" className="h-8 w-8 rounded-full border border-mirzapur-gold/50 bg-black object-contain p-0.5" />
             <div className="leading-tight">
@@ -221,17 +249,25 @@ export default function BiddingStories({ open, onClose }: BiddingStoriesProps) {
           </button>
         </div>
 
-        {/* Slide content */}
-        <div key={index} className="flex flex-1 flex-col justify-center gap-5 px-6 pb-10 animate-in fade-in duration-300 sm:px-8">
-          <div className="text-mirzapur-gold">{slide.icon}</div>
-          <div className="text-xs uppercase tracking-[0.25em] text-mirzapur-gold/70">{slide.eyebrow}</div>
-          <h2 className="font-display text-3xl leading-tight text-mirzapur-gradient sm:text-4xl">{slide.title}</h2>
-          <div className="text-base leading-relaxed text-mirzapur-bone/90 sm:text-[17px]">{slide.body}</div>
-        </div>
+        {slide.poster ? (
+          // Caption sits just under the header, in the poster's empty top strip (above the head)
+          <div key={index} className="relative z-10 px-4 pt-1 animate-in fade-in duration-500 sm:pt-2">
+            {slide.body}
+          </div>
+        ) : (
+          <>
+            <div key={index} className="flex flex-1 flex-col justify-center gap-5 px-6 pb-10 animate-in fade-in duration-300 sm:px-8">
+              <div className="text-mirzapur-gold">{slide.icon}</div>
+              <div className="text-xs uppercase tracking-[0.25em] text-mirzapur-gold/70">{slide.eyebrow}</div>
+              <h2 className="font-display text-3xl leading-tight text-mirzapur-gradient sm:text-4xl">{slide.title}</h2>
+              <div className="text-base leading-relaxed text-mirzapur-bone/90 sm:text-[17px]">{slide.body}</div>
+            </div>
 
-        <div className="pb-[max(1rem,env(safe-area-inset-bottom))] text-center text-[11px] text-mirzapur-bone/40">
-          Tap right for next · left for back · hold to pause
-        </div>
+            <div className="pb-[max(1rem,env(safe-area-inset-bottom))] text-center text-[11px] text-mirzapur-bone/40">
+              Tap right for next · left for back · hold to pause
+            </div>
+          </>
+        )}
       </div>
     </div>
   )
